@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Camera, IndianRupee, ShieldAlert, FileText } from "lucide-react";
+import { Camera, IndianRupee, ShieldAlert, FileText, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -43,15 +43,20 @@ export default function CollectorHome() {
         </Link>
       </section>
 
-      <section>
+      <section className="grid grid-cols-2 gap-4">
         <Link to="/collector/safety" className="block w-full">
-          <Card className="border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-colors">
-            <CardContent className="flex items-center p-4 gap-4">
+          <Card className="border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-colors h-full">
+            <CardContent className="flex flex-col items-center justify-center p-4 gap-2 text-center h-full">
               <ShieldAlert className="w-8 h-8 text-destructive" />
-              <div>
-                <h3 className="font-medium text-destructive">Safety Guidelines</h3>
-                <p className="text-sm text-muted-foreground">How to handle hazardous materials</p>
-              </div>
+              <span className="font-medium text-destructive">Safety</span>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link to="/collector/sync" className="block w-full">
+          <Card className="border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors h-full">
+            <CardContent className="flex flex-col items-center justify-center p-4 gap-2 text-center h-full">
+              <RefreshCw className="w-8 h-8 text-slate-600" />
+              <span className="font-medium text-slate-700">Sync Center</span>
             </CardContent>
           </Card>
         </Link>
