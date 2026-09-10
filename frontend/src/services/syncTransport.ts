@@ -8,7 +8,7 @@ export interface ISyncTransport {
 /**
  * MOCK/DEMO TRANSPORT
  * This simulates network latency and allows deterministic failures for testing.
- * In M12, this will be completely replaced by FastApiTransport without changing the sync manager.
+ * In M12, this will be completely replaced by FastAPITransport without changing the sync manager.
  */
 class MockTransport implements ISyncTransport {
   async sendEvent(event: OutboxEvent): Promise<void> {

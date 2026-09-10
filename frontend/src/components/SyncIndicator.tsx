@@ -18,6 +18,11 @@ export default function SyncIndicator() {
     []
   );
 
+  if (unsyncedCount === undefined || hasFailed === undefined) {
+    // Avoid falsely showing "Synced" while the IndexedDB query is still resolving
+    return null;
+  }
+
   if (!isOnline) {
     return (
       <Link to="/collector/sync" className="flex items-center gap-2 text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 shadow-sm transition-all hover:bg-amber-100">

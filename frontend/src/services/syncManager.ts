@@ -38,15 +38,13 @@ export async function processOutbox() {
     while (true) {
       if (!navigator.onLine) break; // Halts if network drops mid-sync
 
-      // We explicitly query 'pending' and 'failed'
-      const pendingEvents = await db.outbox
-        .where('sync_status')
-        .anyOf('pending', 'failed')
-        .sortBy('created_at_local');
+      // Fetch only the oldest pending/failed event without loading the whole queue
+      const event = await db.outbox
+        .orderBy('created_at_local')
+        .filter(e => e.sync_status === 'pending' || e.sync_status === 'failed')
+        .first();
 
-      if (pendingEvents.length === 0) break;
-
-      const event = pendingEvents[0];
+      if (!event) break;
 
       // Mark as syncing
       await db.outbox.update(event.id, { sync_status: 'syncing' });
