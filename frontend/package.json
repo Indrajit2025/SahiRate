@@ -11,16 +11,20 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "dexie": "^4.4.6",
+    "dexie-react-hooks": "^4.4.0",
     "lucide-react": "^1.44.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@types/node": "^24.13.4",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.5.5",
     "oxlint": "^1.79.0",
