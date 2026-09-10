@@ -1,9 +1,13 @@
 import { Routes, Route, Link } from "react-router-dom";
+import { useEffect } from "react";
 import CollectorHome from "./pages/collector/Home";
 import CreateLotWizard from "./pages/collector/CreateLot";
 import Earnings from "./pages/collector/Earnings";
 import Safety from "./pages/collector/Safety";
 import PriceBoard from "./pages/collector/PriceBoard";
+import SyncCenter from "./pages/collector/SyncCenter";
+import SyncIndicator from "./components/SyncIndicator";
+import { initSyncManager } from "./services/syncManager";
 
 function Home() {
   return (
@@ -47,17 +51,28 @@ function Placeholder({ title }: { title: string }) {
 }
 
 function App() {
+  useEffect(() => {
+    // Initialize the background sync manager orchestration
+    initSyncManager();
+  }, []);
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/collector" element={<CollectorHome />} />
-      <Route path="/collector/create-lot" element={<CreateLotWizard />} />
-      <Route path="/collector/earnings" element={<Earnings />} />
-      <Route path="/collector/safety" element={<Safety />} />
-      <Route path="/collector/price" element={<PriceBoard />} />
-      <Route path="/recycler/*" element={<Placeholder title="Recycler" />} />
-      <Route path="/admin/*" element={<Placeholder title="Admin" />} />
-    </Routes>
+    <>
+      <div className="fixed top-4 right-4 z-50">
+        <SyncIndicator />
+      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/collector" element={<CollectorHome />} />
+        <Route path="/collector/create-lot" element={<CreateLotWizard />} />
+        <Route path="/collector/earnings" element={<Earnings />} />
+        <Route path="/collector/safety" element={<Safety />} />
+        <Route path="/collector/price" element={<PriceBoard />} />
+        <Route path="/collector/sync" element={<SyncCenter />} />
+        <Route path="/recycler/*" element={<Placeholder title="Recycler" />} />
+        <Route path="/admin/*" element={<Placeholder title="Admin" />} />
+      </Routes>
+    </>
   );
 }
 
