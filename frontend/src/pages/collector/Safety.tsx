@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Volume2, Zap, Flame } from "lucide-react";
+import { ArrowLeft, Volume2, Zap, Flame, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -12,7 +12,7 @@ const SAFETY_CARDS = [
   },
   {
     title: "CRT Monitor",
-    icon: Monitor, // Wait, Monitor needs to be imported, let's use another icon or import it
+    icon: Monitor,
     rules: ["Handle carefully", "Avoid breaking glass", "Contains toxic dust"],
     audioLabel: "कांच न तोड़ें..."
   },
@@ -23,9 +23,6 @@ const SAFETY_CARDS = [
     audioLabel: "तारों को न जलाएं..."
   }
 ];
-
-// Re-importing missing icon
-import { Monitor } from "lucide-react";
 
 export default function Safety() {
   const navigate = useNavigate();
@@ -48,7 +45,14 @@ export default function Safety() {
                   <card.icon className="w-5 h-5 text-destructive" />
                   <h3 className="font-bold text-lg">{card.title}</h3>
                 </div>
-                <Button variant="ghost" size="icon" className="rounded-full text-blue-600 bg-blue-50 hover:bg-blue-100">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-full text-muted-foreground bg-muted"
+                  disabled
+                  aria-label="Play audio"
+                  title="Audio not yet available"
+                >
                   <Volume2 className="w-5 h-5" />
                 </Button>
               </div>

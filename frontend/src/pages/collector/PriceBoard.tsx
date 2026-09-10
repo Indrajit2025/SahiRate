@@ -44,7 +44,7 @@ export default function PriceBoard() {
         ))}
       </div>
       
-      <p className="text-center text-xs text-muted-foreground mt-8">Prices are updated automatically when online.</p>
+      <p className="text-center text-xs text-muted-foreground mt-8">Note: These are demo prices for reference. Live prices will be available in a future update.</p>
     </div>
   );
 }

@@ -56,11 +56,11 @@ export default function Earnings() {
           <Card key={lot.id}>
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="font-semibold">{lot.payload.material_id}</p>
-                <p className="text-sm text-muted-foreground">{lot.payload.approx_weight_kg} kg • {new Date(lot.created_at_local).toLocaleDateString()}</p>
+                <p className="font-semibold">{lot.payload.material_id || "Unknown material"}</p>
+                <p className="text-sm text-muted-foreground">{lot.payload.approx_weight_kg ? `${lot.payload.approx_weight_kg} kg` : "—"} • {new Date(lot.created_at_local).toLocaleDateString()}</p>
               </div>
               <div className="text-right">
-                <p className="font-bold">₹{lot.payload.estimated_value}</p>
+                <p className="font-bold">{lot.payload.estimated_value != null ? `₹${lot.payload.estimated_value}` : "—"}</p>
                 {lot.sync_status === 'synced' ? (
                   <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 mt-1"><CheckCircle2 className="w-3 h-3 mr-1"/> Paid</Badge>
                 ) : (

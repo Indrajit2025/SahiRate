@@ -36,16 +36,25 @@ function WeightStep() {
   const { material_id, setWeight, setStep } = useCreateLotStore();
   const [val, setVal] = useState("");
   
-  const handlePad = (num: string) => setVal(v => v + num);
+  const handlePad = (num: string) => {
+    setVal(v => {
+      if (num === '.' && v.includes('.')) return v;
+      if (num === '.' && v === '') return '0.';
+      return v + num;
+    });
+  };
   const handleDel = () => setVal(v => v.slice(0, -1));
   const material = MATERIALS.find(m => m.id === material_id);
+
+  const parsedWeight = parseFloat(val);
+  const isValid = val !== "" && !isNaN(parsedWeight) && parsedWeight > 0 && !val.endsWith('.');
 
   return (
     <div className="space-y-6 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
       <h2 className="text-2xl font-bold text-center">Approximate Weight</h2>
       <div className="flex items-center gap-2 text-muted-foreground">
         {material && <material.icon className="w-5 h-5" />}
-        <span>{material?.label}</span>
+        <span>{material?.label || "Unknown Material"}</span>
       </div>
       
       <div className="text-6xl font-bold py-8 border-b-2 border-primary min-w-[200px] text-center">
@@ -63,7 +72,7 @@ function WeightStep() {
 
       <div className="flex w-full gap-4 pt-4">
         <Button variant="ghost" size="lg" className="flex-1" onClick={() => setStep('material')}>Back</Button>
-        <Button size="lg" className="flex-1 text-lg" disabled={!val || parseFloat(val) <= 0} onClick={() => setWeight(parseFloat(val))}>
+        <Button size="lg" className="flex-1 text-lg" disabled={!isValid} onClick={() => setWeight(parsedWeight)}>
           Next
         </Button>
       </div>
@@ -76,8 +85,17 @@ function PriceStep() {
   const material = MATERIALS.find(m => m.id === material_id);
   const weight = approx_weight_kg || 0;
   
-  const minPrice = material!.min * weight;
-  const maxPrice = material!.max * weight;
+  if (!material) {
+    return (
+      <div className="space-y-8 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
+        <h2 className="text-2xl font-bold text-center text-destructive">Error</h2>
+        <p className="text-muted-foreground">Material not selected. Please go back.</p>
+      </div>
+    );
+  }
+
+  const minPrice = material.min * weight;
+  const maxPrice = material.max * weight;
 
   return (
     <div className="space-y-8 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
@@ -90,7 +108,7 @@ function PriceStep() {
             <IndianRupee className="w-8 h-8 mr-1" />
             {minPrice} - {maxPrice}
           </div>
-          <p className="text-sm text-muted-foreground">Based on {material?.label} at ₹{material?.min}-₹{material?.max}/kg</p>
+          <p className="text-sm text-muted-foreground">Based on {material.label} at ₹{material.min}-₹{material.max}/kg</p>
         </CardContent>
       </Card>
 
