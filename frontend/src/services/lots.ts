@@ -74,19 +74,21 @@ export async function acceptLocalLot(
   lotId: string,
   recyclerId: string = DEMO_RECYCLER_ID,
 ): Promise<void> {
-  const lot = await db.lots.get(lotId);
-  if (!lot) throw new Error("Lot not found");
-
-  const currentStatus = lot.status || "available";
-  if (currentStatus === "accepted") {
-    console.log(`[Lots] Lot ${lotId} is already accepted. Idempotent return.`);
-    return;
-  }
-
   const now = new Date().toISOString();
   const eventId = uuidv4();
+  let wasAlreadyAccepted = false;
 
   await db.transaction("rw", db.lots, db.outbox, async () => {
+    // Read the lot INSIDE the transaction to ensure atomicity against concurrent accepts
+    const lot = await db.lots.get(lotId);
+    if (!lot) throw new Error("Lot not found");
+
+    const currentStatus = lot.status || "available";
+    if (currentStatus === "accepted") {
+      wasAlreadyAccepted = true;
+      return;
+    }
+
     await db.lots.update(lotId, {
       status: "accepted",
       accepted_by: recyclerId,
@@ -102,6 +104,11 @@ export async function acceptLocalLot(
       payload: { lot_id: lotId, recycler_id: recyclerId },
     });
   });
+
+  if (wasAlreadyAccepted) {
+    console.log(`[Lots] Lot ${lotId} is already accepted. Idempotent return.`);
+    return;
+  }
 
   if (typeof navigator !== "undefined" && navigator.onLine) {
     processOutbox().catch(console.error);

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Package, Inbox, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
 import { DEMO_RECYCLER_ID } from "@/services/lots";
@@ -29,10 +28,7 @@ export default function RecyclerHome() {
         <h2 className="text-xl font-semibold mb-4">Dashboard</h2>
         <div className="grid grid-cols-2 gap-4">
           <Link to="/recycler/available" className="block w-full">
-            <Button
-              variant="outline"
-              className="w-full h-32 flex flex-col items-center justify-center gap-2 relative"
-            >
+            <Card className="w-full h-32 flex flex-col items-center justify-center gap-2 relative hover:bg-muted/50 transition-colors cursor-pointer">
               <Package className="w-8 h-8 text-primary" />
               <span className="font-semibold whitespace-normal text-center">
                 Available Lots
@@ -42,14 +38,11 @@ export default function RecyclerHome() {
                   {availableCount}
                 </div>
               )}
-            </Button>
+            </Card>
           </Link>
 
           <Link to="/recycler/my-lots" className="block w-full">
-            <Button
-              variant="outline"
-              className="w-full h-32 flex flex-col items-center justify-center gap-2 relative"
-            >
+            <Card className="w-full h-32 flex flex-col items-center justify-center gap-2 relative hover:bg-muted/50 transition-colors cursor-pointer">
               <Inbox className="w-8 h-8 text-secondary" />
               <span className="font-semibold whitespace-normal text-center">
                 My Lots
@@ -59,7 +52,7 @@ export default function RecyclerHome() {
                   {myLotsCount}
                 </div>
               )}
-            </Button>
+            </Card>
           </Link>
         </div>
       </section>

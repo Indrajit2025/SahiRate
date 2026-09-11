@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 export default function AvailableLots() {
   const lots = useLiveQuery(() =>
     db.lots
-      .filter((l) => (l.status || "available") === "available")
+      .orderBy("created_at_local")
       .reverse()
+      .filter((l) => (l.status || "available") === "available")
       .toArray(),
   );
 

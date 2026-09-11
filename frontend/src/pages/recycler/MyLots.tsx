@@ -9,10 +9,11 @@ import { DEMO_RECYCLER_ID } from "@/services/lots";
 export default function MyLots() {
   const lots = useLiveQuery(() =>
     db.lots
+      .orderBy("created_at_local")
+      .reverse()
       .filter(
         (l) => l.status === "accepted" && l.accepted_by === DEMO_RECYCLER_ID,
       )
-      .reverse()
       .toArray(),
   );
 
