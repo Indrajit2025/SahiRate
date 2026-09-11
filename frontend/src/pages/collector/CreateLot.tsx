@@ -241,9 +241,8 @@ function PhotoStep() {
     try {
       setProcessing(true);
       const dataUri = await compressImageForLocalDb(file);
-      setPreviewUri(dataUri);
 
-      // Save directly to Dexie using the draft lot id
+      // Save directly to Dexie using the draft lot id FIRST
       await db.transaction("rw", db.photos, async () => {
         await db.photos.where("lot_id").equals(draft_id).delete();
         await db.photos.add({
@@ -253,11 +252,18 @@ function PhotoStep() {
           created_at_local: new Date().toISOString(),
         });
       });
+
+      // ONLY set preview if the Dexie write was successful
+      setPreviewUri(dataUri);
     } catch (err) {
       console.error("Failed to compress/save image:", err);
+      setPreviewUri(null); // Clear preview state if it failed
       alert("Failed to process photo.");
     } finally {
       setProcessing(false);
+      // Reset inputs so the user can try again if they want
+      if (cameraInputRef.current) cameraInputRef.current.value = "";
+      if (galleryInputRef.current) galleryInputRef.current.value = "";
     }
   };
 
@@ -276,23 +282,25 @@ function PhotoStep() {
 
       {!previewUri ? (
         <div className="flex flex-col gap-4 w-full">
-          <Card
-            className="w-full h-32 border-dashed border-2 bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer flex flex-col items-center justify-center"
+          <Button
+            variant="outline"
+            className="w-full h-32 border-dashed border-2 bg-muted/30 hover:bg-muted/50 flex flex-col items-center justify-center p-4 gap-2 text-muted-foreground whitespace-normal"
             onClick={() => cameraInputRef.current?.click()}
+            disabled={processing}
+            aria-label="Take Photo"
           >
-            <CardContent className="flex flex-col items-center justify-center p-4 gap-2 text-muted-foreground">
-              <Camera className="w-10 h-10" />
-              <span className="font-semibold">
-                {processing ? "Processing..." : "Take Photo"}
-              </span>
-            </CardContent>
-          </Card>
+            <Camera className="w-10 h-10" />
+            <span className="font-semibold text-lg">
+              {processing ? "Processing..." : "Take Photo"}
+            </span>
+          </Button>
 
           <Button
             variant="outline"
             className="h-16 text-lg w-full"
             onClick={() => galleryInputRef.current?.click()}
             disabled={processing}
+            aria-label="Choose from Gallery"
           >
             Choose from Gallery
           </Button>
@@ -309,6 +317,7 @@ function PhotoStep() {
             size="icon"
             className="absolute top-4 right-4 rounded-full shadow-lg"
             onClick={clearPhoto}
+            aria-label="Remove photo"
           >
             <Trash2 className="w-5 h-5" />
           </Button>

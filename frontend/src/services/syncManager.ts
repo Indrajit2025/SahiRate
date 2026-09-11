@@ -65,6 +65,7 @@ export async function processOutbox() {
         if (error.name === 'NetworkError' || error.message?.includes('Failed to fetch')) {
           console.log(`[SyncManager] Network unavailable for event ${event.id}, reverting to pending.`);
           await db.outbox.update(event.id, { sync_status: 'pending' });
+          useSyncStore.getState().setOnline(false);
         } else {
           // Failure: Mark as failed so it can be retried later
           console.error(`[SyncManager] Failed to sync event ${event.id}:`, error);
