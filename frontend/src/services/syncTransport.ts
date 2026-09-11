@@ -1,5 +1,5 @@
-import type { OutboxEvent } from '../types';
-import { useSyncStore } from '../stores/syncStore';
+import type { OutboxEvent } from '@/types';
+import { useSyncStore } from '@/stores/syncStore';
 
 export interface ISyncTransport {
   sendEvent(event: OutboxEvent): Promise<void>;
@@ -14,16 +14,26 @@ class MockTransport implements ISyncTransport {
   async sendEvent(event: OutboxEvent): Promise<void> {
     console.log(`[MockTransport] Sending event: ${event.type} (ID: ${event.id})`);
     console.log(`[MockTransport] Idempotency Key: ${event.idempotency_key}`);
+    // Consume flag before the await to ensure it captures the exact intent reliably
+    const shouldFail = useSyncStore.getState().failNextSync;
+    if (shouldFail) {
+      useSyncStore.getState().setFailNextSync(false);
+    }
     
+    // Check actual connectivity, because navigator.onLine can lie.
+    // Fetch an un-cached endpoint. If truly offline, this throws instantly.
+    try {
+      await fetch(`/api/mock-ping?_t=${Date.now()}`, { method: 'HEAD', cache: 'no-store' });
+    } catch (e) {
+      const err = new Error("Mock transport: True offline state detected (fetch failed).");
+      err.name = "NetworkError";
+      throw err;
+    }
+
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Check for deterministic failure
-    const shouldFail = useSyncStore.getState().failNextSync;
-    
     if (shouldFail) {
-      // Consume the failure toggle so it only fails once per toggle
-      useSyncStore.getState().setFailNextSync(false);
       console.error(`[MockTransport] Simulated failure triggered for event ${event.id}`);
       throw new Error("Simulated network or backend failure.");
     }

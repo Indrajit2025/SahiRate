@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
-import { Camera, IndianRupee, ShieldAlert, FileText, RefreshCw } from "lucide-react";
+import {
+  Camera,
+  IndianRupee,
+  ShieldAlert,
+  FileText,
+  RefreshCw,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useCreateLotStore } from "@/stores/createLotStore";
+import { db } from "@/db/dexie";
 
 export default function CollectorHome() {
   return (
@@ -12,8 +20,25 @@ export default function CollectorHome() {
 
       <section>
         <h2 className="text-xl font-semibold mb-4">Start a Handover</h2>
-        <Link to="/collector/create-lot" className="block w-full">
-          <Button size="lg" className="w-full h-24 text-lg bg-primary/10 text-primary hover:bg-primary/20 border-2 border-primary border-dashed flex flex-col items-center justify-center gap-2">
+        <Link
+          to="/collector/create-lot"
+          className="block w-full"
+          onClick={async () => {
+            const draft_id = useCreateLotStore.getState().draft_id;
+            if (draft_id) {
+              // Cleanup orphaned photo if the previous draft was never finalized
+              const existingLot = await db.lots.get(draft_id);
+              if (!existingLot) {
+                await db.photos.where("lot_id").equals(draft_id).delete();
+              }
+            }
+            useCreateLotStore.getState().reset();
+          }}
+        >
+          <Button
+            size="lg"
+            className="w-full h-24 text-lg bg-primary/10 text-primary hover:bg-primary/20 border-2 border-primary border-dashed flex flex-col items-center justify-center gap-2"
+          >
             <Camera className="w-8 h-8" />
             <span>New Collection</span>
           </Button>
