@@ -9,27 +9,32 @@ import SyncCenter from "./pages/collector/SyncCenter";
 import SyncIndicator from "./components/SyncIndicator";
 import { initSyncManager } from "./services/syncManager";
 
+import RecyclerHome from "./pages/recycler/Home";
+import AvailableLots from "./pages/recycler/AvailableLots";
+import MyLots from "./pages/recycler/MyLots";
+import LotDetails from "./pages/recycler/LotDetails";
+
 function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 space-y-4">
       <h1 className="text-3xl font-bold text-primary">SahiRate</h1>
       <p className="text-muted-foreground">Select your role to continue</p>
-      
+
       <div className="flex flex-wrap justify-center gap-4 mt-8">
-        <Link 
-          to="/collector" 
+        <Link
+          to="/collector"
           className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90"
         >
           Collector
         </Link>
-        <Link 
-          to="/recycler" 
+        <Link
+          to="/recycler"
           className="px-6 py-3 rounded-lg bg-secondary text-secondary-foreground font-medium border hover:bg-secondary/80"
         >
           Recycler
         </Link>
-        <Link 
-          to="/admin" 
+        <Link
+          to="/admin"
           className="px-6 py-3 rounded-lg bg-muted text-foreground font-medium border hover:bg-muted/80"
         >
           Admin
@@ -63,13 +68,23 @@ function App() {
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
+
+        {/* Collector Routes */}
         <Route path="/collector" element={<CollectorHome />} />
         <Route path="/collector/create-lot" element={<CreateLotWizard />} />
         <Route path="/collector/earnings" element={<Earnings />} />
         <Route path="/collector/safety" element={<Safety />} />
         <Route path="/collector/price" element={<PriceBoard />} />
         <Route path="/collector/sync" element={<SyncCenter />} />
-        <Route path="/recycler/*" element={<Placeholder title="Recycler" />} />
+
+        {/* Recycler Routes */}
+        <Route path="/recycler" element={<RecyclerHome />} />
+        <Route path="/recycler/available" element={<AvailableLots />} />
+        <Route path="/recycler/my-lots" element={<MyLots />} />
+        <Route path="/recycler/lot/:id" element={<LotDetails />} />
+        <Route path="/recycler/sync" element={<SyncCenter />} />
+
+        {/* Admin Route */}
         <Route path="/admin/*" element={<Placeholder title="Admin" />} />
       </Routes>
     </>
