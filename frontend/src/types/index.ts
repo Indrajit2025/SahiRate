@@ -1,4 +1,4 @@
-export type SyncStatus = 'pending' | 'syncing' | 'synced' | 'failed';
+export type SyncStatus = "pending" | "syncing" | "synced" | "failed";
 
 export interface LotPayload {
   material_id?: string;
@@ -13,6 +13,9 @@ export interface Lot {
   id: string; // client-generated-uuid
   sync_status: SyncStatus;
   created_at_local: string; // ISO string
+  status?: "available" | "accepted";
+  accepted_by?: string;
+  accepted_at?: string;
   payload: LotPayload;
 }
 

@@ -63,3 +63,47 @@ export async function createLocalLot(
 export async function getLocalLots(): Promise<Lot[]> {
   return await db.lots.orderBy("created_at_local").reverse().toArray();
 }
+
+export const DEMO_RECYCLER_ID = "demo-recycler-123";
+
+/**
+ * Accepts a local lot and queues the acceptance for sync.
+ * Idempotent: returns early if already accepted.
+ */
+export async function acceptLocalLot(
+  lotId: string,
+  recyclerId: string = DEMO_RECYCLER_ID,
+): Promise<void> {
+  const lot = await db.lots.get(lotId);
+  if (!lot) throw new Error("Lot not found");
+
+  const currentStatus = lot.status || "available";
+  if (currentStatus === "accepted") {
+    console.log(`[Lots] Lot ${lotId} is already accepted. Idempotent return.`);
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const eventId = uuidv4();
+
+  await db.transaction("rw", db.lots, db.outbox, async () => {
+    await db.lots.update(lotId, {
+      status: "accepted",
+      accepted_by: recyclerId,
+      accepted_at: now,
+    });
+
+    await db.outbox.add({
+      id: eventId,
+      type: "LOT_ACCEPTED",
+      created_at_local: now,
+      sync_status: "pending",
+      idempotency_key: eventId,
+      payload: { lot_id: lotId, recycler_id: recyclerId },
+    });
+  });
+
+  if (typeof navigator !== "undefined" && navigator.onLine) {
+    processOutbox().catch(console.error);
+  }
+}
