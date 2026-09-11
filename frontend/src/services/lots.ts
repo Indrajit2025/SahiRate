@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db/dexie';
 import type { Lot, LotPayload, OutboxEvent } from '../types';
+import { processOutbox } from './syncManager';
 
 /**
  * Creates a lot entirely offline and queues it in the outbox for synchronization.
  */
-export async function createLocalLot(payload: LotPayload): Promise<Lot> {
-  const transactionId = uuidv4();
+export async function createLocalLot(payload: LotPayload, explicitId?: string): Promise<Lot> {
+  const transactionId = explicitId || uuidv4();
   const now = new Date().toISOString();
   
   const lot: Lot = {
@@ -30,6 +31,12 @@ export async function createLocalLot(payload: LotPayload): Promise<Lot> {
     await db.lots.add(lot);
     await db.outbox.add(outboxEvent);
   });
+
+  // Trigger auto-sync if currently online
+  if (typeof navigator !== 'undefined' && navigator.onLine) {
+    // Fire and forget to avoid blocking the UI response
+    processOutbox().catch(console.error);
+  }
 
   return lot;
 }

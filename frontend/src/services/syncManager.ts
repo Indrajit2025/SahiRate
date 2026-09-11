@@ -1,6 +1,6 @@
-import { db } from '../db/dexie';
-import { syncTransport } from './syncTransport';
-import { useSyncStore } from '../stores/syncStore';
+import { db } from '@/db/dexie';
+import { syncTransport } from '@/services/syncTransport';
+import { useSyncStore } from '@/stores/syncStore';
 
 
 let isSyncManagerRunning = false;
@@ -61,10 +61,15 @@ export async function processOutbox() {
           }
         });
 
-      } catch (error) {
-        // Failure: Mark as failed so it can be retried later
-        console.error(`[SyncManager] Failed to sync event ${event.id}:`, error);
-        await db.outbox.update(event.id, { sync_status: 'failed' });
+      } catch (error: any) {
+        if (error.name === 'NetworkError' || error.message?.includes('Failed to fetch')) {
+          console.log(`[SyncManager] Network unavailable for event ${event.id}, reverting to pending.`);
+          await db.outbox.update(event.id, { sync_status: 'pending' });
+        } else {
+          // Failure: Mark as failed so it can be retried later
+          console.error(`[SyncManager] Failed to sync event ${event.id}:`, error);
+          await db.outbox.update(event.id, { sync_status: 'failed' });
+        }
         // We break out of the loop on failure to avoid hammering the network
         break;
       }
