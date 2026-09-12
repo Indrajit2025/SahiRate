@@ -20,7 +20,7 @@ export type TranslationKeys = NestedKeyOf<typeof en>;
 interface I18nState {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: TranslationKeys, params?: Record<string, string | number>) => string;
+  t: <T = string>(key: TranslationKeys, params?: Record<string, string | number>) => T;
 }
 
 export const useI18nStore = create<I18nState>()(
@@ -28,7 +28,7 @@ export const useI18nStore = create<I18nState>()(
     (set, get) => ({
       language: "en",
       setLanguage: (lang) => set({ language: lang }),
-      t: (key, params) => {
+      t: <T = string>(key: TranslationKeys, params?: Record<string, string | number>): T => {
         const keys = key.split(".");
         const lang = get().language;
 
@@ -42,7 +42,7 @@ export const useI18nStore = create<I18nState>()(
           current = current[k];
         }
 
-        let result = typeof current === "string" ? current : undefined;
+        let result = typeof current === "string" || Array.isArray(current) ? current : undefined;
 
         // Fallback to English
         if (result === undefined) {
@@ -54,14 +54,14 @@ export const useI18nStore = create<I18nState>()(
             }
             fallback = fallback[k];
           }
-          result = typeof fallback === "string" ? fallback : key;
+          result = typeof fallback === "string" || Array.isArray(fallback) ? fallback : key;
         }
 
         if (params && typeof result === "string") {
-          return result.replace(/{{(\w+)}}/g, (_, k) => String(params[k] ?? `{{${k}}}`));
+          return result.replace(/{{(\w+)}}/g, (_, k) => String(params[k] ?? `{{${k}}}`)) as unknown as T;
         }
 
-        return result;
+        return result as unknown as T;
       },
     }),
     {

@@ -19,6 +19,7 @@ import { createLocalLot } from "@/services/lots";
 import { db } from "@/db/dexie";
 import { compressImageForLocalDb } from "@/utils/image";
 import { useI18nStore } from "@/i18n";
+import { useAudio } from "@/hooks/useAudio";
 
 const MATERIALS = [
   { id: "PCB", label: "PCB Board", icon: Cpu, min: 115, max: 135 },
@@ -27,7 +28,7 @@ const MATERIALS = [
   { id: "DISPLAY", label: "Screen", icon: Monitor, min: 40, max: 50 },
 ];
 
-function MaterialStep() { const { t } = useI18nStore();
+function MaterialStep() { const { t } = useI18nStore(); const { playAudio } = useAudio(); useEffect(() => { playAudio('collector.create.choose_material'); }, []);
   const setMaterial = useCreateLotStore((s) => s.setMaterial);
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
@@ -52,7 +53,7 @@ function MaterialStep() { const { t } = useI18nStore();
   );
 }
 
-function WeightStep() { const { t } = useI18nStore();
+function WeightStep() { const { t } = useI18nStore(); const { playAudio } = useAudio(); useEffect(() => { playAudio('collector.create.enter_weight'); }, []);
   const { material_id, setWeight, setStep } = useCreateLotStore();
   const [val, setVal] = useState("");
 
@@ -215,7 +216,7 @@ function PriceStep() { const { t } = useI18nStore();
   );
 }
 
-function PhotoStep() {
+function PhotoStep() { const { playAudio } = useAudio(); useEffect(() => { playAudio('collector.create.take_photo'); }, []);
   const { draft_id, setStep } = useCreateLotStore();
   const [previewUri, setPreviewUri] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -366,7 +367,7 @@ function PhotoStep() {
   );
 }
 
-function ConfirmStep() {
+function ConfirmStep() { const { playAudio } = useAudio(); useEffect(() => { playAudio('collector.create.ready_to_save'); }, []);
   const navigate = useNavigate();
   const { draft_id, material_id, approx_weight_kg, estimated_value, reset } =
     useCreateLotStore();
@@ -383,8 +384,8 @@ function ConfirmStep() {
       draft_id!,
     );
     setSaving(false);
-    reset();
-    navigate("/collector");
+      navigate("/collector");
+      setTimeout(() => reset(), 100);
   };
 
   const { t } = useI18nStore();

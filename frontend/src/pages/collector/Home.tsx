@@ -14,6 +14,7 @@ import { useCreateLotStore } from "@/stores/createLotStore";
 import { db } from "@/db/dexie";
 
 import LanguageSelector from "@/components/LanguageSelector";
+import AudioToggle from "@/components/AudioToggle";
 import { useI18nStore } from "@/i18n";
 
 export default function CollectorHome() {
@@ -24,7 +25,7 @@ export default function CollectorHome() {
     <div className="flex flex-col min-h-screen p-4 pb-20 space-y-6">
       <header className="flex justify-between items-center py-4">
         <h1 className="text-2xl font-bold text-primary">{t("collector.home")}</h1>
-        <LanguageSelector />
+        <div className="flex gap-2"><AudioToggle /><LanguageSelector /></div>
       </header>
 
       <section>

@@ -3,8 +3,10 @@ import { ArrowLeft, Volume2, Zap, Flame, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useI18nStore } from "@/i18n";
+import { useAudio } from "@/hooks/useAudio";
 
 export default function Safety() {
+  const { playAudio } = useAudio();
   const navigate = useNavigate();
   const { t } = useI18nStore();
 
@@ -13,19 +15,19 @@ export default function Safety() {
       title: t("collector.safety.battery_title"),
       icon: Zap,
       rules: (t("collector.safety.battery_rules") as unknown as string[]) || ["Do not puncture", "Do not burn", "Do not dismantle"],
-      audioLabel: "बैटरी को न पंचर करें न जलाएं..."
+      audioKey: "collector.safety.battery_rules"
     },
     {
       title: t("collector.safety.monitor_title"),
       icon: Monitor,
       rules: (t("collector.safety.monitor_rules") as unknown as string[]) || ["Handle carefully", "Avoid breaking glass", "Contains toxic dust"],
-      audioLabel: "शीशा न तोड़ें..."
+      audioKey: "collector.safety.monitor_rules"
     },
     {
       title: t("collector.safety.cables_title"),
       icon: Flame,
       rules: (t("collector.safety.cables_rules") as unknown as string[]) || ["Don't burn wires", "Strip manually", "Avoid toxic smoke"],
-      audioLabel: "तारों को न जलाएं..."
+      audioKey: "collector.safety.cables_rules"
     }
   ];
 
@@ -50,10 +52,9 @@ export default function Safety() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full text-muted-foreground bg-muted"
-                  disabled
+                  className="rounded-full text-muted-foreground bg-muted hover:text-primary hover:bg-primary/10"
+                  onClick={() => playAudio(card.audioKey)}
                   aria-label={t("common.play_audio")}
-                  title={t("common.audio_unavailable")}
                 >
                   <Volume2 className="w-5 h-5" />
                 </Button>
@@ -67,10 +68,6 @@ export default function Safety() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-4 pt-3 border-t text-sm text-muted-foreground italic flex items-center">
-                   <Volume2 className="w-4 h-4 mr-2" />
-                   "{card.audioLabel}"
-                </div>
               </div>
             </CardContent>
           </Card>

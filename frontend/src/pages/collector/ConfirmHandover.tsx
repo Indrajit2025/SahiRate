@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, CheckCircle2, IndianRupee, Weight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
 import { collectorConfirmHandover } from "@/services/handovers";
 import { useI18nStore } from "@/i18n";
+import { useAudio } from "@/hooks/useAudio";
 
-export default function ConfirmHandover() { const { t } = useI18nStore();
+export default function ConfirmHandover() { const { t } = useI18nStore(); const { playAudio } = useAudio();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +32,8 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
   }
 
   const isConfirmed = handover.status !== "QR_GENERATED" && handover.status !== "VERIFIED";
+  useEffect(() => { if (isConfirmed) playAudio("collector.confirm_handover.confirmed"); }, [isConfirmed]);
+
 
   const handleConfirm = async () => {
     if (!id || isSubmitting) return;
