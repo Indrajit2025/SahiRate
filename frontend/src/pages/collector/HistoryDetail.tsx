@@ -4,8 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
+import { useI18nStore } from "@/i18n";
 
-export default function HistoryDetail() {
+export default function HistoryDetail() { const { t } = useI18nStore();
   const { lotId } = useParams<{ lotId: string }>();
   const navigate = useNavigate();
 
@@ -15,8 +16,8 @@ export default function HistoryDetail() {
   const photo = useLiveQuery(() => (lotId ? db.photos.where("lot_id").equals(lotId).first() : undefined), [lotId]);
   const outboxEvents = useLiveQuery(() => db.outbox.toArray(), []) || [];
 
-  if (lot === undefined) return <div className="p-8 text-center text-muted-foreground">Loading...</div>;
-  if (!lot) return <div className="p-8 text-center font-bold">Transaction not found</div>;
+  if (lot === undefined) return <div className="p-8 text-center text-muted-foreground">{t("common.loading")}</div>;
+  if (!lot) return <div className="p-8 text-center font-bold">{t("collector.history_detail.transaction_not_found")}</div>;
 
   const isPendingSync = lot.sync_status !== "synced" || outboxEvents.some((e: any) =>
     e.sync_status !== "synced" && (e.payload?.lot_id === lot.id || (handover && e.payload?.handover_id === handover.id))
@@ -36,7 +37,7 @@ export default function HistoryDetail() {
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-2xl font-bold">Transaction Details</h1>
+        <h1 className="text-2xl font-bold">{t("collector.history_detail.title")}</h1>
       </header>
 
       {isPendingSync && (
@@ -59,24 +60,24 @@ export default function HistoryDetail() {
           <div className="p-6 space-y-6">
             <div className="flex justify-between items-start">
               <div>
-                <h2 className="text-2xl font-bold">{lot.payload.material_id || "Unknown Material"}</h2>
+                <h2 className="text-2xl font-bold">{lot.payload.material_id || t("common.unknown_material")}</h2>
                 {handover?.recycler_id && (
-                  <p className="text-sm text-muted-foreground mt-1">Recycler ID: {handover.recycler_id}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{t("collector.history_detail.recycler_id")}: {handover.recycler_id}</p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-muted">
               <div className="space-y-1">
-                <span className="text-sm text-muted-foreground flex items-center gap-1"><Weight className="w-4 h-4"/> Weight</span>
+                <span className="text-sm text-muted-foreground flex items-center gap-1"><Weight className="w-4 h-4"/> {t("common.weight")}</span>
                 <p className="text-xl font-bold">{displayWeight} kg</p>
               </div>
               <div className="space-y-1">
-                <span className="text-sm text-muted-foreground flex items-center gap-1"><IndianRupee className="w-4 h-4"/> Rate</span>
+                <span className="text-sm text-muted-foreground flex items-center gap-1"><IndianRupee className="w-4 h-4"/> {t("common.rate")}</span>
                 <p className="text-xl font-bold">₹{displayRate}/kg</p>
               </div>
               <div className="col-span-2 space-y-1 pt-2">
-                <span className="text-sm text-muted-foreground">Final Amount</span>
+                <span className="text-sm text-muted-foreground">{t("collector.history_detail.final_amount")}</span>
                 <p className="text-3xl font-black text-primary">₹{displayAmount}</p>
               </div>
             </div>
@@ -87,7 +88,7 @@ export default function HistoryDetail() {
       {/* Lifecycle Timeline */}
       <Card className="shadow-sm">
         <CardContent className="p-6 space-y-6">
-          <h3 className="font-semibold text-lg">Timeline</h3>
+          <h3 className="font-semibold text-lg">{t("collector.history_detail.timeline")}</h3>
 
           <div className="relative border-l-2 border-muted ml-3 space-y-6">
             {/* 1. Created */}
@@ -95,7 +96,7 @@ export default function HistoryDetail() {
               <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
                 <CheckCircle2 className="w-3 h-3" />
               </div>
-              <p className="font-medium">Lot Created</p>
+              <p className="font-medium">{t("collector.history_detail.lot_created")}</p>
               <p className="text-xs text-muted-foreground">{new Date(lot.created_at_local).toLocaleString()}</p>
             </div>
 
@@ -105,7 +106,7 @@ export default function HistoryDetail() {
                 <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
-                <p className="font-medium">Accepted by Recycler</p>
+                <p className="font-medium">{t("collector.history_detail.accepted_by_recycler")}</p>
                 {lot.accepted_at && (
                   <p className="text-xs text-muted-foreground">{new Date(lot.accepted_at).toLocaleString()}</p>
                 )}
@@ -118,7 +119,7 @@ export default function HistoryDetail() {
                 <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
-                <p className="font-medium">Weight Verified</p>
+                <p className="font-medium">{t("collector.history_detail.weight_verified")}</p>
                 <p className="text-xs text-muted-foreground">{new Date(handover.created_at_local).toLocaleString()}</p>
               </div>
             )}
@@ -129,7 +130,7 @@ export default function HistoryDetail() {
                 <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
-                <p className="font-medium">Collector Confirmed</p>
+                <p className="font-medium">{t("collector.history_detail.collector_confirmed")}</p>
                 <p className="text-xs text-muted-foreground">{new Date(handover.collector_confirmed_at).toLocaleString()}</p>
               </div>
             )}
@@ -140,7 +141,7 @@ export default function HistoryDetail() {
                 <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
-                <p className="font-medium">Handover Completed</p>
+                <p className="font-medium">{t("collector.history_detail.handover_completed")}</p>
                 <p className="text-xs text-muted-foreground">{new Date(handover.completed_at).toLocaleString()}</p>
               </div>
             )}
@@ -151,7 +152,7 @@ export default function HistoryDetail() {
                 <div className="absolute -left-[9px] top-1 bg-green-500 text-white rounded-full p-0.5">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
-                <p className="font-medium text-green-700">Payment Received</p>
+                <p className="font-medium text-green-700">{t("status.paid")}</p>
                 <p className="text-xs text-muted-foreground">{new Date(payment.paid_at).toLocaleString()} via {payment.payment_mode}</p>
               </div>
             )}

@@ -3,6 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { Cloud, CloudOff, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { db } from '@/db/dexie';
 import { useSyncStore } from '@/stores/syncStore';
+import { useI18nStore } from '@/i18n';
 
 export default function SyncIndicator() {
   const { isOnline, isSyncing } = useSyncStore();
@@ -20,6 +21,8 @@ export default function SyncIndicator() {
     []
   );
 
+  const { t } = useI18nStore();
+
   if (unsyncedCount === undefined || hasFailed === undefined) {
     // Avoid falsely showing "Synced" while the IndexedDB query is still resolving
     return null;
@@ -29,7 +32,7 @@ export default function SyncIndicator() {
     return (
       <Link to={syncPath} className="flex items-center gap-2 text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 shadow-sm transition-all hover:bg-amber-100">
         <CloudOff className="w-4 h-4" />
-        <span>Offline ({unsyncedCount || 0})</span>
+        <span>{t("common.offline")} ({unsyncedCount || 0})</span>
       </Link>
     );
   }
@@ -65,7 +68,7 @@ export default function SyncIndicator() {
   return (
     <Link to={syncPath} className="flex items-center gap-2 text-xs font-medium text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm transition-all hover:bg-green-100 opacity-70 hover:opacity-100">
       <CheckCircle2 className="w-4 h-4" />
-      <span>Synced</span>
+      <span>{t("common.synced")}</span>
     </Link>
   );
 }

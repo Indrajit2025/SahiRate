@@ -6,8 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
 import { collectorConfirmHandover } from "@/services/handovers";
+import { useI18nStore } from "@/i18n";
 
-export default function ConfirmHandover() {
+export default function ConfirmHandover() { const { t } = useI18nStore();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,13 +85,13 @@ export default function ConfirmHandover() {
         <>
           <Card className="border-primary/20 shadow-sm overflow-hidden">
             <div className="bg-primary/5 p-4 border-b">
-              <h2 className="font-semibold text-primary">{lot.payload.material_id || "Unknown Material"}</h2>
+              <h2 className="font-semibold text-primary">{lot.payload.material_id || t("common.unknown_material")}</h2>
             </div>
             <CardContent className="p-6 space-y-6">
               <div className="flex items-center justify-between border-b pb-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Weight className="w-5 h-5" />
-                  <span>Verified Weight</span>
+                  <span>{t("collector.confirm_handover.verified_weight")}</span>
                 </div>
                 <span className="text-xl font-semibold">{handover.verified_weight_kg} kg</span>
               </div>
@@ -98,7 +99,7 @@ export default function ConfirmHandover() {
               <div className="flex items-center justify-between border-b pb-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <IndianRupee className="w-5 h-5" />
-                  <span>Final Rate</span>
+                  <span>{t("collector.confirm_handover.final_rate")}</span>
                 </div>
                 <span className="text-xl font-semibold">₹{handover.final_rate}/kg</span>
               </div>

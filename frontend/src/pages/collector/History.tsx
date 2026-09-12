@@ -5,9 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
+import { useI18nStore } from "@/i18n";
 
 
-export default function History() {
+export default function History() { const { t } = useI18nStore();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "COMPLETED" | "PAID">("ALL");
 
@@ -21,11 +22,11 @@ export default function History() {
     const payment = handover ? payments.find((p) => p.handover_id === handover.id) : null;
     const lot = lots.find((l) => l.id === lotId);
 
-    if (payment) return { label: "PAID", type: "PAID", color: "bg-green-100 text-green-800 border-green-200" };
-    if (handover && handover.status === "COMPLETED") return { label: "PAYMENT PENDING", type: "COMPLETED", color: "bg-blue-100 text-blue-800 border-blue-200" };
-    if (handover) return { label: "HANDOVER PENDING", type: "PENDING", color: "bg-amber-100 text-amber-800 border-amber-200" };
-    if (lot?.status === "accepted") return { label: "ACCEPTED", type: "PENDING", color: "bg-purple-100 text-purple-800 border-purple-200" };
-    return { label: "LOT CREATED", type: "PENDING", color: "bg-slate-100 text-slate-800 border-slate-200" };
+    if (payment) return { label: t("status.paid"), type: "PAID", color: "bg-green-100 text-green-800 border-green-200" };
+    if (handover && handover.status === "COMPLETED") return { label: t("status.pending"), type: "COMPLETED", color: "bg-blue-100 text-blue-800 border-blue-200" };
+    if (handover) return { label: t("status.pending"), type: "PENDING", color: "bg-amber-100 text-amber-800 border-amber-200" };
+    if (lot?.status === "accepted") return { label: t("status.accepted"), type: "PENDING", color: "bg-purple-100 text-purple-800 border-purple-200" };
+    return { label: t("status.available"), type: "PENDING", color: "bg-slate-100 text-slate-800 border-slate-200" };
   };
 
   const filteredLots = lots.filter((lot) => {
@@ -45,8 +46,8 @@ export default function History() {
           <ChevronLeft className="w-6 h-6" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold">History</h1>
-          <p className="text-sm text-muted-foreground">Your recycling activity</p>
+          <h1 className="text-2xl font-bold">{t("collector.history.title")}</h1>
+
         </div>
       </header>
 
@@ -63,7 +64,7 @@ export default function History() {
             onClick={() => setFilter(f)}
             aria-pressed={filter === f}
           >
-            {f === "ALL" ? "All Activity" : f === "PENDING" ? "Pending" : f === "COMPLETED" ? "Completed" : "Paid"}
+            {f === "ALL" ? t("collector.history.filter_all") : f === "PENDING" ? t("collector.history.filter_pending") : f === "COMPLETED" ? t("collector.history.filter_completed") : t("status.paid")}
           </button>
         ))}
       </div>
@@ -72,8 +73,8 @@ export default function History() {
         {filteredLots.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed rounded-xl border-muted">
             <Inbox className="w-12 h-12 text-muted-foreground/30 mb-4" />
-            <h3 className="font-semibold text-lg">No recycling activity yet.</h3>
-            <p className="text-muted-foreground text-sm mt-1">Start a new collection to see history.</p>
+            <h3 className="font-semibold text-lg">{t("collector.history.no_history")}</h3>
+
           </div>
         ) : (
           filteredLots.map((lot) => {
@@ -97,7 +98,7 @@ export default function History() {
                 <CardContent className="p-4 space-y-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-bold text-lg">{lot.payload.material_id || "Unknown Material"}</h3>
+                      <h3 className="font-bold text-lg">{t(`material.${lot.payload.material_id}` as any) || t("common.unknown_material")}</h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         {new Date(lot.created_at_local).toLocaleDateString()} • {displayWeight} kg
                       </p>
@@ -108,7 +109,7 @@ export default function History() {
                       </span>
                       {isPendingSync && (
                         <span className="text-[10px] uppercase font-bold text-amber-600 flex items-center gap-1 mt-1">
-                          <Clock className="w-3 h-3" /> Pending Sync
+                          <Clock className="w-3 h-3" /> {t("status.pending_sync")}
                         </span>
                       )}
                     </div>

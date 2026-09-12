@@ -1,0 +1,161 @@
+import type { TranslationType } from "./en";
+
+export const hi: TranslationType = {
+  common: {
+    back: "वापस",
+    save: "सहेजें",
+    retry: "पुनः प्रयास करें",
+    loading: "लोड हो रहा है...",
+    offline: "ऑफ़लाइन",
+    online: "ऑनलाइन",
+    synced: "सिंक किया गया",
+    weight: "वजन",
+    rate: "दर",
+    amount: "राशि",
+    date: "तारीख",
+    total: "कुल",
+    unknown_material: "अज्ञात सामग्री",
+    error_occurred: "एक त्रुटि हुई",
+    no_data: "कोई डेटा उपलब्ध नहीं",
+    search: "खोजें"
+  },
+  status: {
+    available: "उपलब्ध",
+    accepted: "स्वीकार किया गया",
+    pending: "लंबित",
+    failed: "विफल",
+    synced: "सिंक किया गया",
+    syncing: "सिंक हो रहा है...",
+    offline: "ऑफ़लाइन",
+    online: "ऑनलाइन",
+    completed: "पूरा हुआ",
+    paid: "भुगतान किया गया",
+    qr_generated: "QR उत्पन्न",
+    collector_confirmed: "कलेक्टर द्वारा पुष्टि की गई",
+    pending_sync: "सिंक लंबित",
+    stable: "स्थिर"
+  },
+  material: {
+    PCB: "पीसीबी बोर्ड",
+    CABLE: "तारें",
+    BATTERY: "बैटरी",
+    DISPLAY: "स्क्रीन"
+  },
+  collector: {
+    home: {
+      title: "सहीरेट (SahiRate)",
+      start_handover: "हैंडओवर शुरू करें",
+      new_collection: "नया संग्रह",
+      history: "इतिहास",
+      scan_qr: "QR स्कैन करें",
+      price_board: "मूल्य बोर्ड",
+      earnings: "मेरी कमाई",
+      safety: "सुरक्षा",
+      sync_center: "सिंक केंद्र",
+      switch_role: "भूमिका बदलें"
+    },
+    create: {
+      new_collection: "नया संग्रह",
+      choose_material: "सामग्री चुनें",
+      enter_weight: "वजन दर्ज करें",
+      approx_weight_kg: "अनुमानित वजन (किग्रा)",
+      fair_price_range: "उचित मूल्य सीमा",
+      local_market_value: "स्थानीय बाजार मूल्य",
+      price_desc: "{{material}} के आधार पर ₹{{min}}-₹{{max}}/किग्रा",
+      photograph_scrap: "स्क्रैप की तस्वीर लें",
+      take_photo: "तस्वीर लें",
+      processing: "प्रसंस्करण...",
+      choose_gallery: "गैलरी से चुनें",
+      remove_photo: "तस्वीर हटाएं",
+      ready_to_save: "सहेजने के लिए तैयार",
+      ready_desc: "आपका संग्रह विवरण स्थानीय रूप से सहेजने के लिए तैयार है।",
+      confirm_save: "पुष्टि करें और सहेजें",
+      saving: "सहेजा जा रहा है...",
+      next: "आगे",
+      cancel: "रद्द करें"
+    },
+    earnings: {
+      title: "मेरी कमाई",
+      total_earnings: "कुल कमाई",
+      pending_payments: "लंबित भुगतान",
+      this_month: "इस महीने",
+      recent_transactions: "हाल के लेन-देन",
+      transaction_id: "संदर्भ",
+      no_transactions: "अभी तक कोई पूर्ण लेन-देन नहीं।"
+    },
+    history: {
+      title: "इतिहास",
+      filter_all: "सभी",
+      filter_pending: "लंबित",
+      filter_completed: "पूरा हुआ",
+      offline_awaiting: "ऑफ़लाइन — सिंक की प्रतीक्षा में",
+      no_history: "कोई लेन-देन नहीं मिला।"
+    },
+    history_detail: {
+      title: "लेन-देन विवरण",
+      transaction_not_found: "लेन-देन नहीं मिला",
+      recycler_id: "रिसाइकलर आईडी",
+      final_amount: "अंतिम राशि",
+      timeline: "समयरेखा",
+      lot_created: "लॉट बनाया गया",
+      accepted_by_recycler: "रिसाइकलर द्वारा स्वीकार किया गया",
+      weight_verified: "वजन सत्यापित",
+      collector_confirmed: "कलेक्टर द्वारा पुष्टि की गई",
+      handover_completed: "हैंडओवर पूरा हुआ"
+    },
+    safety: {
+      title: "सुरक्षा दिशानिर्देश",
+      battery_title: "बैटरी",
+      battery_rules: ["छेद न करें", "न जलाएं", "विघटित न करें"],
+      monitor_title: "सीआरटी मॉनिटर",
+      monitor_rules: ["सावधानी से संभालें", "कांच टूटने से बचाएं", "इसमें जहरीली धूल होती है"],
+      cables_title: "केबल और तार",
+      cables_rules: ["तारों को न जलाएं", "हाथ से छीलें", "जहरीले धुएं से बचें"],
+      wear_gloves: "दस्ताने पहनें",
+      wear_gloves_desc: "नुकीली धातु या ई-कचरे को संभालते समय हमेशा मोटे सुरक्षात्मक दस्ताने पहनें।",
+      heavy_lifting: "सुरक्षित उठान",
+      heavy_lifting_desc: "भारी वस्तुएं उठाते समय अपने घुटनों को मोड़ें और पीठ सीधी रखें।",
+      sharp_objects: "तेज वस्तुएं",
+      sharp_objects_desc: "खुली कीलों, टूटे हुए शीशे या तेज किनारों से सावधान रहें।",
+      emergency: "आपातकालीन",
+      emergency_desc: "अपने पास एक बुनियादी प्राथमिक चिकित्सा किट रखें और स्थानीय आपातकालीन संपर्कों को जानें।"
+    },
+    price_board: {
+      title: "मूल्य बोर्ड",
+      today_rates: "आज की दरें",
+      rate_per_kg: "प्रति किग्रा",
+      updated_today: "आज अपडेट किया गया"
+    },
+    sync_center: {
+      title: "सिंक केंद्र",
+      status: "स्थिति",
+      items_pending: "आइटम लंबित",
+      sync_now: "अभी सिंक करें",
+      syncing: "सिंक हो रहा है...",
+      last_synced: "अंतिम सिंक",
+      auto_sync_desc: "इंटरनेट से कनेक्ट होने पर ऐप स्वचालित रूप से सिंक हो जाएगा।"
+    },
+    scan_handover: {
+      title: "हैंडओवर स्कैन करें",
+      position_qr: "QR कोड को फ्रेम के अंदर रखें",
+      scanning: "स्कैन हो रहा है...",
+      enter_manually: "या संदर्भ आईडी दर्ज करें",
+      reference_id: "संदर्भ आईडी",
+      find_handover: "हैंडओवर खोजें",
+      invalid_qr: "अमान्य QR कोड प्रारूप",
+      cross_device_disclaimer: "नोट: इस स्थानीय डेमो में, क्रॉस-डिवाइस स्कैनिंग नकली है। असली स्कैनिंग M12 में काम करेगी।"
+    },
+    confirm_handover: {
+      title: "हैंडओवर की पुष्टि करें",
+      verifying: "हैंडओवर सत्यापित कर रहा है...",
+      handover_details: "हैंडओवर विवरण",
+      verified_weight: "सत्यापित वजन",
+      final_rate: "अंतिम दर",
+      confirm_handover: "हैंडओवर की पुष्टि करें",
+      confirming: "पुष्टि की जा रही है...",
+      success: "हैंडओवर की पुष्टि हो गई!",
+      return_home: "होम पर वापस जाएं",
+      error_not_found: "हैंडओवर नहीं मिला या QR उत्पन्न स्थिति में नहीं है।"
+    }
+  }
+};

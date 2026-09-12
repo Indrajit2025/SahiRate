@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { QRScanner } from "@/components/QRScanner";
+import { useI18nStore } from "@/i18n";
 import { db } from "@/db/dexie";
 
-export default function ScanHandover() {
+export default function ScanHandover() { const { t } = useI18nStore();
   const navigate = useNavigate();
   const [manualRef, setManualRef] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -19,10 +20,10 @@ export default function ScanHandover() {
       if (payload.type === "SAHIRATE_HANDOVER" && payload.handover_id) {
         navigate(`/collector/handover/${payload.handover_id}`);
       } else {
-        setError("Invalid QR code format.");
+        setError(t("collector.scan_handover.invalid_qr"));
       }
     } catch {
-      setError("Invalid QR code data. Make sure you scan a valid SahiRate Handover QR.");
+      setError(t("collector.scan_handover.invalid_qr"));
     }
   };
 
@@ -79,12 +80,12 @@ export default function ScanHandover() {
             </h2>
             <div className="flex gap-2">
               <Input
-                placeholder="e.g. A1B2C3D4"
+                placeholder={t("collector.scan_handover.reference_id")}
                 value={manualRef}
                 onChange={(e) => setManualRef(e.target.value.toUpperCase())}
                 className="font-mono text-lg h-12 uppercase"
               />
-              <Button className="h-12 w-12" onClick={handleManualSearch} aria-label="Find handover by reference">
+              <Button className="h-12 w-12" onClick={handleManualSearch} aria-label={t("collector.scan_handover.find_handover")}>
                 <Search className="w-5 h-5" />
               </Button>
             </div>

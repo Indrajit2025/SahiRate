@@ -13,16 +13,22 @@ import { Button } from "@/components/ui/button";
 import { useCreateLotStore } from "@/stores/createLotStore";
 import { db } from "@/db/dexie";
 
+import LanguageSelector from "@/components/LanguageSelector";
+import { useI18nStore } from "@/i18n";
+
 export default function CollectorHome() {
   const navigate = useNavigate();
+  const { t } = useI18nStore();
+
   return (
     <div className="flex flex-col min-h-screen p-4 pb-20 space-y-6">
       <header className="flex justify-between items-center py-4">
-        <h1 className="text-2xl font-bold text-primary">SahiRate</h1>
+        <h1 className="text-2xl font-bold text-primary">{t("collector.home")}</h1>
+        <LanguageSelector />
       </header>
 
       <section>
-        <h2 className="text-xl font-semibold mb-4">Start a Handover</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("collector.home.start_handover")}</h2>
         <div className="grid grid-cols-2 gap-4">
           <Link
             to="/collector/create-lot"
@@ -43,7 +49,7 @@ export default function CollectorHome() {
               className="w-full h-24 text-lg bg-primary/10 text-primary hover:bg-primary/20 border-2 border-primary border-dashed flex flex-col items-center justify-center gap-2"
             >
               <Camera className="w-8 h-8" />
-              <span>New Collection</span>
+              <span>{t("collector.home.new_collection")}</span>
             </Button>
           </Link>
           <Button
@@ -52,7 +58,7 @@ export default function CollectorHome() {
             onClick={() => navigate('/collector/history')}
           >
             <History className="w-6 h-6 text-muted-foreground" />
-            <span>History</span>
+            <span>{t("collector.home.history")}</span>
           </Button>
           <Button
             variant="outline"
@@ -60,7 +66,7 @@ export default function CollectorHome() {
             onClick={() => navigate('/collector/scan')}
           >
             <QrCode className="w-6 h-6 text-primary" />
-            <span className="font-medium text-primary">Scan QR</span>
+            <span className="font-medium text-primary">{t("collector.home.scan_qr")}</span>
           </Button>
         </div>
       </section>
@@ -72,7 +78,7 @@ export default function CollectorHome() {
               <div className="p-3 bg-secondary rounded-full text-secondary-foreground">
                 <IndianRupee className="w-6 h-6" />
               </div>
-              <span className="font-medium">Price Board</span>
+              <span className="font-medium">{t("collector.home.price_board")}</span>
             </CardContent>
           </Card>
         </Link>
@@ -82,7 +88,7 @@ export default function CollectorHome() {
               <div className="p-3 bg-secondary rounded-full text-secondary-foreground">
                 <FileText className="w-6 h-6" />
               </div>
-              <span className="font-medium">My Earnings</span>
+              <span className="font-medium">{t("collector.home.earnings")}</span>
             </CardContent>
           </Card>
         </Link>
@@ -93,7 +99,7 @@ export default function CollectorHome() {
           <Card className="border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-colors h-full">
             <CardContent className="flex flex-col items-center justify-center p-4 gap-2 text-center h-full">
               <ShieldAlert className="w-8 h-8 text-destructive" />
-              <span className="font-medium text-destructive">Safety</span>
+              <span className="font-medium text-destructive">{t("collector.home.safety")}</span>
             </CardContent>
           </Card>
         </Link>
@@ -101,11 +107,17 @@ export default function CollectorHome() {
           <Card className="border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors h-full">
             <CardContent className="flex flex-col items-center justify-center p-4 gap-2 text-center h-full">
               <RefreshCw className="w-8 h-8 text-slate-600" />
-              <span className="font-medium text-slate-700">Sync Center</span>
+              <span className="font-medium text-slate-700">{t("collector.home.sync_center")}</span>
             </CardContent>
           </Card>
         </Link>
       </section>
+
+      <div className="mt-8 text-center">
+        <Link to="/" className="text-sm text-muted-foreground hover:underline">
+          {t("collector.home.switch_role")}
+        </Link>
+      </div>
     </div>
   );
 }
