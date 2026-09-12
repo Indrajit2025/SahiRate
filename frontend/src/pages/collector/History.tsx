@@ -14,6 +14,7 @@ export default function History() {
   const lots = useLiveQuery(() => db.lots.orderBy("created_at_local").reverse().toArray(), []) || [];
   const handovers = useLiveQuery(() => db.handovers.toArray(), []) || [];
   const payments = useLiveQuery(() => db.payments.toArray(), []) || [];
+  const outboxEvents = useLiveQuery(() => db.outbox.toArray(), []) || [];
 
   const getDerivedStatus = (lotId: string) => {
     const handover = handovers.find((h) => h.lot_id === lotId);
@@ -51,14 +52,19 @@ export default function History() {
 
       <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-hide">
         {(["ALL", "PENDING", "COMPLETED", "PAID"] as const).map((f) => (
-          <Badge
+          <button
             key={f}
-            variant={filter === f ? "default" : "outline"}
-            className="cursor-pointer whitespace-nowrap px-4 py-2 text-sm"
+            type="button"
+            className={`whitespace-nowrap px-4 py-2 text-sm rounded-full font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              filter === f
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+            }`}
             onClick={() => setFilter(f)}
+            aria-pressed={filter === f}
           >
             {f === "ALL" ? "All Activity" : f === "PENDING" ? "Pending" : f === "COMPLETED" ? "Completed" : "Paid"}
-          </Badge>
+          </button>
         ))}
       </div>
 
@@ -74,6 +80,10 @@ export default function History() {
             const handover = handovers.find((h) => h.lot_id === lot.id);
             const payment = handover ? payments.find((p) => p.handover_id === handover.id) : null;
             const status = getDerivedStatus(lot.id);
+
+            const isPendingSync = lot.sync_status !== "synced" || outboxEvents.some((e: any) =>
+              e.sync_status !== "synced" && (e.payload?.lot_id === lot.id || (handover && e.payload?.handover_id === handover.id))
+            );
 
             const displayWeight = handover?.verified_weight_kg || lot.payload.approx_weight_kg || "—";
             const displayAmount = payment?.amount || handover?.final_amount || lot.payload.estimated_value || "—";
@@ -96,7 +106,7 @@ export default function History() {
                       <span className="font-bold text-lg flex items-center">
                         ₹{displayAmount}
                       </span>
-                      {lot.sync_status !== "synced" && (
+                      {isPendingSync && (
                         <span className="text-[10px] uppercase font-bold text-amber-600 flex items-center gap-1 mt-1">
                           <Clock className="w-3 h-3" /> Pending Sync
                         </span>

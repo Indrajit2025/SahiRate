@@ -26,11 +26,18 @@ export async function createHandover(
     created_at_local: now,
   };
 
-  await db.transaction("rw", db.handovers, db.outbox, async () => {
-    // Check if one already exists for this lot to be strictly idempotent
+  let resultingHandover: Handover | undefined;
+
+  await db.transaction("rw", db.handovers, db.lots, db.outbox, async () => {
+    const lot = await db.lots.get(lotId);
+    if (!lot) throw new Error("Lot not found");
+    if (lot.status !== "accepted") throw new Error("Lot must be accepted to create a handover");
+    if (lot.accepted_by !== recyclerId) throw new Error("Lot was accepted by a different recycler");
+
     const existing = await db.handovers.where("lot_id").equals(lotId).first();
     if (existing) {
-      throw new Error("Handover already exists for this lot");
+      resultingHandover = existing;
+      return;
     }
 
     await db.handovers.add(handover);
@@ -42,13 +49,14 @@ export async function createHandover(
       idempotency_key: handoverId,
       payload: handover,
     });
+    resultingHandover = handover;
   });
 
   if (typeof navigator !== "undefined" && navigator.onLine) {
     processOutbox().catch(console.error);
   }
 
-  return handover;
+  return resultingHandover!;
 }
 
 export async function collectorConfirmHandover(handoverId: string): Promise<void> {
@@ -63,6 +71,10 @@ export async function collectorConfirmHandover(handoverId: string): Promise<void
     if (handover.status === "COLLECTOR_CONFIRMED" || handover.status === "COMPLETED") {
       wasAlreadyConfirmed = true;
       return;
+    }
+
+    if (handover.status !== "QR_GENERATED") {
+      throw new Error("Handover is in an invalid state for confirmation");
     }
 
     await db.handovers.update(handoverId, {
@@ -101,13 +113,14 @@ export async function recyclerCompleteHandover(handoverId: string): Promise<void
       return;
     }
 
+    if (handover.status !== "COLLECTOR_CONFIRMED") {
+      throw new Error("Handover must be confirmed by the collector before completion");
+    }
+
     await db.handovers.update(handoverId, {
       status: "COMPLETED",
       completed_at: now,
     });
-
-    // Optional: Update lot status or leave it. We can update status to 'completed' but we don't have it in the type.
-    // It's just accepted in lot. Let's rely on handovers.
 
     await db.outbox.add({
       id: eventId,
@@ -137,7 +150,11 @@ export async function recordPayment(
 
   let existingPayment: Payment | undefined;
 
-  await db.transaction("rw", db.payments, db.outbox, async () => {
+  await db.transaction("rw", db.payments, db.handovers, db.outbox, async () => {
+    const handover = await db.handovers.get(handoverId);
+    if (!handover) throw new Error("Handover not found");
+    if (handover.status !== "COMPLETED") throw new Error("Handover must be completed before recording payment");
+
     existingPayment = await db.payments.where("handover_id").equals(handoverId).first();
     if (existingPayment) {
       return;

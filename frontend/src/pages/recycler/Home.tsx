@@ -7,7 +7,7 @@ import { DEMO_RECYCLER_ID } from "@/services/lots";
 
 export default function RecyclerHome() {
   const availableCount = useLiveQuery(() =>
-    db.lots.filter((l) => (l.status || "available") === "available").count(),
+    db.lots.filter((l) => (l.status || "available") === "available" && l.sync_status === "synced").count(),
   );
 
   const myLotsCount = useLiveQuery(() =>

@@ -36,7 +36,7 @@ export default function VerifyLot() {
   const finalRate = parseFloat(rate);
   const finalAmount = !isNaN(verifiedWeight) && !isNaN(finalRate) ? Math.round(verifiedWeight * finalRate) : 0;
 
-  const isValid = !isNaN(verifiedWeight) && verifiedWeight > 0 && !isNaN(finalRate) && finalRate > 0;
+  const isValid = !isNaN(verifiedWeight) && verifiedWeight > 0 && !isNaN(finalRate) && finalRate > 0 && finalAmount > 0;
 
   const handleGenerateHandover = async () => {
     if (!id || !isValid || isSubmitting) return;
@@ -59,7 +59,7 @@ export default function VerifyLot() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-4 pb-24 space-y-6 animate-in fade-in slide-in-from-right-4">
+    <div className="flex flex-col min-h-screen p-4 pb-28 space-y-6 animate-in fade-in slide-in-from-right-4">
       <header className="flex items-center py-4">
         <button
           onClick={() => navigate(-1)}
@@ -119,11 +119,22 @@ export default function VerifyLot() {
       </Card>
 
       <Card className="bg-secondary/10 border-secondary/20 shadow-sm">
-        <CardContent className="p-6 flex justify-between items-center">
-          <span className="text-lg font-semibold text-secondary-foreground">Final Amount</span>
-          <span className="text-3xl font-bold text-secondary-foreground">₹{finalAmount}</span>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-semibold text-secondary-foreground">Final Amount</span>
+            <span className="text-3xl font-bold text-secondary-foreground">₹{finalAmount}</span>
+          </div>
+          {(!isNaN(verifiedWeight) || !isNaN(finalRate)) && finalAmount <= 0 && (
+            <p className="text-destructive text-sm font-medium mt-2">
+              Final amount must be greater than zero to proceed.
+            </p>
+          )}
         </CardContent>
       </Card>
+
+      <p className="text-xs text-muted-foreground text-center">
+        Note: QR scanning is currently limited to this local device for demo purposes (M12 feature).
+      </p>
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
         <Button

@@ -10,7 +10,7 @@ export default function AvailableLots() {
     db.lots
       .orderBy("created_at_local")
       .reverse()
-      .filter((l) => (l.status || "available") === "available")
+      .filter((l) => (l.status || "available") === "available" && l.sync_status === "synced")
       .toArray(),
   );
 

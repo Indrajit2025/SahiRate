@@ -13,9 +13,14 @@ export default function HistoryDetail() {
   const handover = useLiveQuery(() => (lotId ? db.handovers.where("lot_id").equals(lotId).first() : undefined), [lotId]);
   const payment = useLiveQuery(() => (handover ? db.payments.where("handover_id").equals(handover.id).first() : undefined), [handover]);
   const photo = useLiveQuery(() => (lotId ? db.photos.where("lot_id").equals(lotId).first() : undefined), [lotId]);
+  const outboxEvents = useLiveQuery(() => db.outbox.toArray(), []) || [];
 
   if (lot === undefined) return <div className="p-8 text-center text-muted-foreground">Loading...</div>;
   if (!lot) return <div className="p-8 text-center font-bold">Transaction not found</div>;
+
+  const isPendingSync = lot.sync_status !== "synced" || outboxEvents.some((e: any) =>
+    e.sync_status !== "synced" && (e.payload?.lot_id === lot.id || (handover && e.payload?.handover_id === handover.id))
+  );
 
   const displayWeight = handover?.verified_weight_kg || lot.payload.approx_weight_kg || "—";
   const displayAmount = payment?.amount || handover?.final_amount || lot.payload.estimated_value || "—";
@@ -34,7 +39,7 @@ export default function HistoryDetail() {
         <h1 className="text-2xl font-bold">Transaction Details</h1>
       </header>
 
-      {lot.sync_status !== "synced" && (
+      {isPendingSync && (
         <div className="bg-amber-100 text-amber-800 border-amber-200 border p-3 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold">
           <Clock className="w-4 h-4" />
           Offline — awaiting sync
@@ -118,7 +123,18 @@ export default function HistoryDetail() {
               </div>
             )}
 
-            {/* 4. Completed */}
+            {/* 4. Collector Confirmed */}
+            {handover?.collector_confirmed_at && (
+              <div className="relative pl-6">
+                <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">
+                  <CheckCircle2 className="w-3 h-3" />
+                </div>
+                <p className="font-medium">Collector Confirmed</p>
+                <p className="text-xs text-muted-foreground">{new Date(handover.collector_confirmed_at).toLocaleString()}</p>
+              </div>
+            )}
+
+            {/* 5. Completed */}
             {handover?.status === "COMPLETED" && handover.completed_at && (
               <div className="relative pl-6">
                 <div className="absolute -left-[9px] top-1 bg-primary text-primary-foreground rounded-full p-0.5">

@@ -84,7 +84,7 @@ export default function ScanHandover() {
                 onChange={(e) => setManualRef(e.target.value.toUpperCase())}
                 className="font-mono text-lg h-12 uppercase"
               />
-              <Button className="h-12 w-12" onClick={handleManualSearch}>
+              <Button className="h-12 w-12" onClick={handleManualSearch} aria-label="Find handover by reference">
                 <Search className="w-5 h-5" />
               </Button>
             </div>
@@ -94,6 +94,10 @@ export default function ScanHandover() {
           </CardContent>
         </Card>
       )}
+
+      <p className="text-xs text-muted-foreground text-center mt-4 px-2">
+        Note: QR scanning is currently limited to this local device for demo purposes (M12 feature).
+      </p>
     </div>
   );
 }

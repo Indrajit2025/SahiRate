@@ -40,7 +40,7 @@ export default function LotDetails() {
     );
   }
 
-  const isAvailable = (lot.status || "available") === "available";
+  const isAvailable = (lot.status || "available") === "available" && lot.sync_status === "synced";
   const isAcceptedByMe =
     lot.status === "accepted" && lot.accepted_by === DEMO_RECYCLER_ID;
 
