@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Camera,
   IndianRupee,
   ShieldAlert,
   FileText,
   RefreshCw,
+  QrCode,
+  History
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +14,7 @@ import { useCreateLotStore } from "@/stores/createLotStore";
 import { db } from "@/db/dexie";
 
 export default function CollectorHome() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col min-h-screen p-4 pb-20 space-y-6">
       <header className="flex justify-between items-center py-4">
@@ -20,29 +23,46 @@ export default function CollectorHome() {
 
       <section>
         <h2 className="text-xl font-semibold mb-4">Start a Handover</h2>
-        <Link
-          to="/collector/create-lot"
-          className="block w-full"
-          onClick={async () => {
-            const draft_id = useCreateLotStore.getState().draft_id;
-            if (draft_id) {
-              // Cleanup orphaned photo if the previous draft was never finalized
-              const existingLot = await db.lots.get(draft_id);
-              if (!existingLot) {
-                await db.photos.where("lot_id").equals(draft_id).delete();
+        <div className="grid grid-cols-2 gap-4">
+          <Link
+            to="/collector/create-lot"
+            className="block w-full col-span-2"
+            onClick={async () => {
+              const draft_id = useCreateLotStore.getState().draft_id;
+              if (draft_id) {
+                const existingLot = await db.lots.get(draft_id);
+                if (!existingLot) {
+                  await db.photos.where("lot_id").equals(draft_id).delete();
+                }
               }
-            }
-            useCreateLotStore.getState().reset();
-          }}
-        >
-          <Button
-            size="lg"
-            className="w-full h-24 text-lg bg-primary/10 text-primary hover:bg-primary/20 border-2 border-primary border-dashed flex flex-col items-center justify-center gap-2"
+              useCreateLotStore.getState().reset();
+            }}
           >
-            <Camera className="w-8 h-8" />
-            <span>New Collection</span>
+            <Button
+              size="lg"
+              className="w-full h-24 text-lg bg-primary/10 text-primary hover:bg-primary/20 border-2 border-primary border-dashed flex flex-col items-center justify-center gap-2"
+            >
+              <Camera className="w-8 h-8" />
+              <span>New Collection</span>
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            className="w-full h-24 flex flex-col items-center justify-center gap-2"
+            onClick={() => navigate('/collector/history')}
+          >
+            <History className="w-6 h-6 text-muted-foreground" />
+            <span>History</span>
           </Button>
-        </Link>
+          <Button
+            variant="outline"
+            className="w-full h-24 flex flex-col items-center justify-center gap-2 border-primary/20 hover:bg-primary/5"
+            onClick={() => navigate('/collector/scan')}
+          >
+            <QrCode className="w-6 h-6 text-primary" />
+            <span className="font-medium text-primary">Scan QR</span>
+          </Button>
+        </div>
       </section>
 
       <section className="grid grid-cols-2 gap-4">

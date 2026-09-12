@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, CameraOff, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, CameraOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,10 @@ export default function LotDetails() {
   const photo = useLiveQuery(
     () => (id ? db.photos.where("lot_id").equals(id).first() : undefined),
     [id],
+  );
+  const handover = useLiveQuery(
+    () => (id ? db.handovers.where("lot_id").equals(id).first() : undefined),
+    [id]
   );
 
   if (lot === undefined) {
@@ -140,10 +144,21 @@ export default function LotDetails() {
 
       {isAcceptedByMe && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
-          <div className="flex items-center justify-center gap-2 text-secondary w-full h-14 font-semibold text-lg bg-secondary/10 rounded-lg border border-secondary/20">
-            <CheckCircle2 className="w-6 h-6" />
-            Lot Accepted
-          </div>
+          {handover ? (
+            <Button
+              className="w-full h-14 text-lg font-bold bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+              onClick={() => navigate(`/recycler/handover/${handover.id}`)}
+            >
+              View Handover
+            </Button>
+          ) : (
+            <Button
+              className="w-full h-14 text-lg font-bold bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+              onClick={() => navigate(`/recycler/lot/${id}/verify`)}
+            >
+              Start Handover
+            </Button>
+          )}
         </div>
       )}
     </div>
