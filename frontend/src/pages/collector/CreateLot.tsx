@@ -18,6 +18,7 @@ import { useCreateLotStore } from "@/stores/createLotStore";
 import { createLocalLot } from "@/services/lots";
 import { db } from "@/db/dexie";
 import { compressImageForLocalDb } from "@/utils/image";
+import { useI18nStore } from "@/i18n";
 
 const MATERIALS = [
   { id: "PCB", label: "PCB Board", icon: Cpu, min: 115, max: 135 },
@@ -26,12 +27,12 @@ const MATERIALS = [
   { id: "DISPLAY", label: "Screen", icon: Monitor, min: 40, max: 50 },
 ];
 
-function MaterialStep() {
+function MaterialStep() { const { t } = useI18nStore();
   const setMaterial = useCreateLotStore((s) => s.setMaterial);
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
       <h2 className="text-2xl font-bold text-center mb-8">
-        What are you selling?
+        {t("collector.create.choose_material")}
       </h2>
       <div className="grid grid-cols-2 gap-4">
         {MATERIALS.map((m) => (
@@ -51,7 +52,7 @@ function MaterialStep() {
   );
 }
 
-function WeightStep() {
+function WeightStep() { const { t } = useI18nStore();
   const { material_id, setWeight, setStep } = useCreateLotStore();
   const [val, setVal] = useState("");
 
@@ -84,7 +85,7 @@ function WeightStep() {
 
   return (
     <div className="space-y-6 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
-      <h2 className="text-2xl font-bold text-center">Approximate Weight</h2>
+      <h2 className="text-2xl font-bold text-center">{t("collector.create.approx_weight_kg")}</h2>
       <div className="flex items-center gap-2 text-muted-foreground">
         {material && <material.icon className="w-5 h-5" />}
         <span>{material?.label || "Unknown Material"}</span>
@@ -150,7 +151,7 @@ function WeightStep() {
   );
 }
 
-function PriceStep() {
+function PriceStep() { const { t } = useI18nStore();
   const { material_id, approx_weight_kg, setEstimatedValue, setStep } =
     useCreateLotStore();
   const material = MATERIALS.find((m) => m.id === material_id);
@@ -174,12 +175,12 @@ function PriceStep() {
 
   return (
     <div className="space-y-8 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
-      <h2 className="text-2xl font-bold text-center">Fair Price Range</h2>
+      <h2 className="text-2xl font-bold text-center">{t("collector.create.fair_price_range")}</h2>
 
       <Card className="w-full bg-primary/5 border-primary/20">
         <CardContent className="p-6 text-center space-y-4">
           <p className="text-muted-foreground uppercase tracking-widest text-sm font-semibold">
-            Local Market Value
+            {t("collector.create.local_market_value")}
           </p>
           <div className="text-4xl font-bold text-primary flex items-center justify-center">
             <IndianRupee className="w-8 h-8 mr-1" />
@@ -258,7 +259,7 @@ function PhotoStep() {
     } catch (err) {
       console.error("Failed to compress/save image:", err);
       setPreviewUri(null); // Clear preview state if it failed
-      alert("Failed to process photo.");
+      alert(t("collector.create.photo_failed"));
     } finally {
       setProcessing(false);
       // Reset inputs so the user can try again if they want
@@ -276,9 +277,11 @@ function PhotoStep() {
     }
   };
 
+  const { t } = useI18nStore();
+
   return (
     <div className="space-y-6 flex flex-col items-center animate-in fade-in slide-in-from-right-4">
-      <h2 className="text-2xl font-bold text-center">Photograph Scrap</h2>
+      <h2 className="text-2xl font-bold text-center">{t("collector.create.photograph_scrap")}</h2>
 
       {!previewUri ? (
         <div className="flex flex-col gap-4 w-full">
@@ -287,11 +290,11 @@ function PhotoStep() {
             className="w-full h-32 border-dashed border-2 bg-muted/30 hover:bg-muted/50 flex flex-col items-center justify-center p-4 gap-2 text-muted-foreground whitespace-normal"
             onClick={() => cameraInputRef.current?.click()}
             disabled={processing}
-            aria-label="Take Photo"
+            aria-label={t("collector.create.take_photo")}
           >
             <Camera className="w-10 h-10" />
             <span className="font-semibold text-lg">
-              {processing ? "Processing..." : "Take Photo"}
+              {processing ? t("common.loading") : t("collector.create.take_photo")}
             </span>
           </Button>
 
@@ -300,9 +303,9 @@ function PhotoStep() {
             className="h-16 text-lg w-full"
             onClick={() => galleryInputRef.current?.click()}
             disabled={processing}
-            aria-label="Choose from Gallery"
+            aria-label={t("collector.create.choose_gallery")}
           >
-            Choose from Gallery
+            {t("collector.create.choose_gallery")}
           </Button>
         </div>
       ) : (
@@ -317,7 +320,7 @@ function PhotoStep() {
             size="icon"
             className="absolute top-4 right-4 rounded-full shadow-lg"
             onClick={clearPhoto}
-            aria-label="Remove photo"
+            aria-label={t("collector.create.remove_photo")}
           >
             <Trash2 className="w-5 h-5" />
           </Button>
@@ -384,12 +387,14 @@ function ConfirmStep() {
     navigate("/collector");
   };
 
+  const { t } = useI18nStore();
+
   return (
     <div className="space-y-6 flex flex-col items-center justify-center min-h-[60vh] animate-in zoom-in">
       <CheckCircle2 className="w-24 h-24 text-green-500" />
-      <h2 className="text-3xl font-bold text-center">Ready to Save</h2>
+      <h2 className="text-3xl font-bold text-center">{t("collector.create.ready_to_save")}</h2>
       <p className="text-center text-muted-foreground max-w-[250px]">
-        Your collection details are ready to be saved locally.
+        {t("collector.create.ready_desc")}
       </p>
       <Button
         size="lg"
@@ -397,13 +402,13 @@ function ConfirmStep() {
         disabled={saving}
         onClick={handleFinish}
       >
-        {saving ? "Saving..." : "Confirm & Save"}
+        {saving ? t("common.loading") : t("collector.create.confirm_save")}
       </Button>
     </div>
   );
 }
 
-export default function CreateLotWizard() {
+export default function CreateLotWizard() { const { t } = useI18nStore();
   const { step, initDraft } = useCreateLotStore();
   const navigate = useNavigate();
 
@@ -422,9 +427,7 @@ export default function CreateLotWizard() {
         >
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <span className="text-lg font-medium text-muted-foreground">
-          New Collection
-        </span>
+        <span className="text-lg font-medium text-muted-foreground">{t("collector.create.new_collection")}</span>
       </header>
 
       {step === "material" && <MaterialStep />}

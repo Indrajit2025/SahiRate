@@ -2,30 +2,32 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Volume2, Zap, Flame, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-const SAFETY_CARDS = [
-  {
-    title: "Battery",
-    icon: Zap,
-    rules: ["Do not puncture", "Do not burn", "Do not dismantle"],
-    audioLabel: "बैटरी को न तोड़ें और न जलाएं..."
-  },
-  {
-    title: "CRT Monitor",
-    icon: Monitor,
-    rules: ["Handle carefully", "Avoid breaking glass", "Contains toxic dust"],
-    audioLabel: "कांच न तोड़ें..."
-  },
-  {
-    title: "Cables & Wires",
-    icon: Flame,
-    rules: ["Don't burn wires", "Strip manually", "Avoid toxic smoke"],
-    audioLabel: "तारों को न जलाएं..."
-  }
-];
+import { useI18nStore } from "@/i18n";
 
 export default function Safety() {
   const navigate = useNavigate();
+  const { t } = useI18nStore();
+
+  const SAFETY_CARDS = [
+    {
+      title: t("collector.safety.battery_title"),
+      icon: Zap,
+      rules: (t("collector.safety.battery_rules") as unknown as string[]) || ["Do not puncture", "Do not burn", "Do not dismantle"],
+      audioLabel: "बैटरी को न पंचर करें न जलाएं..."
+    },
+    {
+      title: t("collector.safety.monitor_title"),
+      icon: Monitor,
+      rules: (t("collector.safety.monitor_rules") as unknown as string[]) || ["Handle carefully", "Avoid breaking glass", "Contains toxic dust"],
+      audioLabel: "शीशा न तोड़ें..."
+    },
+    {
+      title: t("collector.safety.cables_title"),
+      icon: Flame,
+      rules: (t("collector.safety.cables_rules") as unknown as string[]) || ["Don't burn wires", "Strip manually", "Avoid toxic smoke"],
+      audioLabel: "तारों को न जलाएं..."
+    }
+  ];
 
   return (
     <div className="max-w-md mx-auto p-4 min-h-screen pb-20">
@@ -33,7 +35,7 @@ export default function Safety() {
         <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="mr-2">
           <ArrowLeft className="w-6 h-6" />
         </Button>
-        <span className="text-lg font-medium">Safety Guidelines</span>
+        <span className="text-lg font-medium">{t("collector.safety.title")}</span>
       </header>
 
       <div className="space-y-6">
@@ -45,13 +47,13 @@ export default function Safety() {
                   <card.icon className="w-5 h-5 text-destructive" />
                   <h3 className="font-bold text-lg">{card.title}</h3>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="rounded-full text-muted-foreground bg-muted"
                   disabled
-                  aria-label="Play audio"
-                  title="Audio not yet available"
+                  aria-label={t("common.play_audio")}
+                  title={t("common.audio_unavailable")}
                 >
                   <Volume2 className="w-5 h-5" />
                 </Button>
@@ -60,7 +62,7 @@ export default function Safety() {
                 <ul className="space-y-2">
                   {card.rules.map((rule, j) => (
                     <li key={j} className="flex items-center text-sm">
-                      <span className="text-destructive font-bold mr-2 text-lg">×</span>
+                      <span className="text-destructive font-bold mr-2 text-lg">x</span>
                       {rule}
                     </li>
                   ))}

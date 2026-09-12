@@ -7,11 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/dexie";
 import { processOutbox } from "@/services/syncManager";
 import { useSyncStore } from "@/stores/syncStore";
+import { useI18nStore } from "@/i18n";
 
-export default function SyncCenter() {
+export default function SyncCenter() { const { t } = useI18nStore();
   const navigate = useNavigate();
   const { isSyncing, isOnline, failNextSync, setFailNextSync } = useSyncStore();
-  
+
   const outboxEvents = useLiveQuery(() => db.outbox.orderBy('created_at_local').reverse().toArray(), []) || [];
 
   return (
@@ -21,16 +22,16 @@ export default function SyncCenter() {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="mr-2">
             <ArrowLeft className="w-6 h-6" />
           </Button>
-          <span className="text-lg font-medium">Sync Center</span>
+          <span className="text-lg font-medium">{t("collector.sync_center.title")}</span>
         </div>
-        <Button 
-          size="sm" 
+        <Button
+          size="sm"
           variant={isSyncing ? "outline" : "default"}
-          disabled={!isOnline || isSyncing} 
+          disabled={!isOnline || isSyncing}
           onClick={() => processOutbox()}
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${isSyncing ? "animate-spin" : ""}`} />
-          {isSyncing ? "Syncing..." : "Sync Now"}
+          {isSyncing ? t("collector.sync_center.syncing") : t("collector.sync_center.sync_now")}
         </Button>
       </header>
 
@@ -43,8 +44,8 @@ export default function SyncCenter() {
           <p className="text-xs text-muted-foreground">
             Toggle this switch to deterministically fail the next sync attempt (e.g. simulating a 500 server error). The transport currently points to a Mock/Demo transport.
           </p>
-          <Button 
-            variant={failNextSync ? "destructive" : "secondary"} 
+          <Button
+            variant={failNextSync ? "destructive" : "secondary"}
             className="w-full"
             onClick={() => setFailNextSync(!failNextSync)}
           >
