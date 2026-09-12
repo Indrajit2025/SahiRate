@@ -20,6 +20,15 @@ import LotDetails from "./pages/recycler/LotDetails";
 import VerifyLot from "./pages/recycler/VerifyLot";
 import HandoverDetails from "./pages/recycler/HandoverDetails";
 
+import AdminLayout from "./layouts/AdminLayout";
+import AdminHome from "./pages/admin/Home";
+import AdminPlaceholder from "./pages/admin/Placeholder";
+import AdminAudit from "./pages/admin/Audit";
+import AdminVerification from "./pages/admin/Verification";
+import AdminAlerts from "./pages/admin/Alerts";
+import AdminTransactions from "./pages/admin/Transactions";
+import AdminTransactionDetail from "./pages/admin/TransactionDetail";
+
 function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 space-y-4">
@@ -46,17 +55,6 @@ function Home() {
           Admin
         </Link>
       </div>
-    </div>
-  );
-}
-
-function Placeholder({ title }: { title: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold">{title} View</h1>
-      <Link to="/" className="mt-4 text-primary hover:underline">
-        &larr; Back to Home
-      </Link>
     </div>
   );
 }
@@ -96,8 +94,16 @@ function App() {
         <Route path="/recycler/handover/:id" element={<HandoverDetails />} />
         <Route path="/recycler/sync" element={<SyncCenter />} />
 
-        {/* Admin Route */}
-        <Route path="/admin/*" element={<Placeholder title="Admin" />} />
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminHome />} />
+          <Route path="transactions" element={<AdminTransactions />} />
+          <Route path="transactions/:id" element={<AdminTransactionDetail />} />
+          <Route path="verification" element={<AdminVerification />} />
+          <Route path="alerts" element={<AdminAlerts />} />
+          <Route path="audit" element={<AdminAudit />} />
+          <Route path="*" element={<AdminPlaceholder />} />
+        </Route>
       </Routes>
     </>
   );
