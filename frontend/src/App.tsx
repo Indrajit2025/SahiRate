@@ -6,6 +6,10 @@ import Earnings from "./pages/collector/Earnings";
 import Safety from "./pages/collector/Safety";
 import PriceBoard from "./pages/collector/PriceBoard";
 import SyncCenter from "./pages/collector/SyncCenter";
+import ScanHandover from "./pages/collector/ScanHandover";
+import ConfirmHandover from "./pages/collector/ConfirmHandover";
+import History from "./pages/collector/History";
+import HistoryDetail from "./pages/collector/HistoryDetail";
 import SyncIndicator from "./components/SyncIndicator";
 import { initSyncManager } from "./services/syncManager";
 
@@ -13,6 +17,8 @@ import RecyclerHome from "./pages/recycler/Home";
 import AvailableLots from "./pages/recycler/AvailableLots";
 import MyLots from "./pages/recycler/MyLots";
 import LotDetails from "./pages/recycler/LotDetails";
+import VerifyLot from "./pages/recycler/VerifyLot";
+import HandoverDetails from "./pages/recycler/HandoverDetails";
 
 function Home() {
   return (
@@ -76,12 +82,18 @@ function App() {
         <Route path="/collector/safety" element={<Safety />} />
         <Route path="/collector/price" element={<PriceBoard />} />
         <Route path="/collector/sync" element={<SyncCenter />} />
+        <Route path="/collector/history" element={<History />} />
+        <Route path="/collector/history/:lotId" element={<HistoryDetail />} />
+        <Route path="/collector/scan" element={<ScanHandover />} />
+        <Route path="/collector/handover/:id" element={<ConfirmHandover />} />
 
         {/* Recycler Routes */}
         <Route path="/recycler" element={<RecyclerHome />} />
         <Route path="/recycler/available" element={<AvailableLots />} />
         <Route path="/recycler/my-lots" element={<MyLots />} />
         <Route path="/recycler/lot/:id" element={<LotDetails />} />
+        <Route path="/recycler/lot/:id/verify" element={<VerifyLot />} />
+        <Route path="/recycler/handover/:id" element={<HandoverDetails />} />
         <Route path="/recycler/sync" element={<SyncCenter />} />
 
         {/* Admin Route */}

@@ -57,3 +57,34 @@ export interface SyncMetadata {
   key: string;
   last_sync_time: string;
 }
+
+export type HandoverStatus = "ACCEPTED" | "VERIFIED" | "QR_GENERATED" | "COLLECTOR_CONFIRMED" | "COMPLETED";
+
+export interface Handover {
+  id: string;
+  lot_id: string;
+  recycler_id: string;
+  collector_id?: string;
+  verified_weight_kg?: number;
+  final_rate?: number;
+  final_amount?: number;
+  status: HandoverStatus;
+  qr_reference?: string;
+  created_at_local: string;
+  collector_confirmed_at?: string;
+  recycler_confirmed_at?: string;
+  completed_at?: string;
+}
+
+export type PaymentMode = "CASH" | "UPI" | "BANK";
+export type PaymentStatus = "PENDING" | "PAID";
+
+export interface Payment {
+  id: string;
+  handover_id: string;
+  amount: number;
+  payment_mode: PaymentMode;
+  status: PaymentStatus;
+  paid_at?: string;
+  created_at_local: string;
+}
