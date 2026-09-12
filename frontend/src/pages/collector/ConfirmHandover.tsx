@@ -18,14 +18,14 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
   const payment = useLiveQuery(() => (id ? db.payments.where('handover_id').equals(id).first() : undefined), [id]);
 
   if (handover === undefined || (handover && lot === undefined)) {
-    return <div className="p-8 text-center text-muted-foreground">Loading...</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t("common.loading")}</div>;
   }
 
   if (!handover || !lot) {
     return (
       <div className="p-8 text-center flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">Handover not found</h2>
-        <Button onClick={() => navigate("/collector")}>Return Home</Button>
+        <h2 className="text-xl font-bold mb-4">{t("collector.confirm_handover.not_found")}</h2>
+        <Button onClick={() => navigate("/collector")}>{t("collector.confirm_handover.return_home")}</Button>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
       await collectorConfirmHandover(id);
     } catch (err: any) {
       console.error(err);
-      alert(err.message || "Failed to confirm handover");
+      alert(err.message || t("collector.confirm_handover.failed_confirm"));
     } finally {
       setIsSubmitting(false);
     }
@@ -51,33 +51,33 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
         <button
           onClick={() => navigate("/collector")}
           className="mr-4 text-muted-foreground hover:text-foreground"
-          aria-label="Go back to Dashboard"
+          aria-label={t("common.go_back_dashboard")}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-2xl font-bold">Review Handover</h1>
+        <h1 className="text-2xl font-bold">{t("collector.confirm_handover.review_title")}</h1>
       </header>
 
       {isConfirmed ? (
         <Card className="border-green-200 bg-green-50 shadow-md">
           <CardContent className="p-8 flex flex-col items-center justify-center space-y-4">
             <CheckCircle2 className="w-16 h-16 text-green-600" />
-            <h2 className="text-2xl font-bold text-center text-green-800">Confirmed!</h2>
+            <h2 className="text-2xl font-bold text-center text-green-800">{t("collector.confirm_handover.confirmed")}</h2>
             <p className="text-center text-green-700 mb-4">
-              Handover confirmed. Waiting for the recycler to finalize and process payment.
+              {t("collector.confirm_handover.confirmed_desc")}
             </p>
             {payment && (
               <div className="w-full bg-white p-4 rounded-lg border text-center">
-                <p className="text-sm font-semibold text-muted-foreground mb-1">Payment Received</p>
+                <p className="text-sm font-semibold text-muted-foreground mb-1">{t("collector.confirm_handover.payment_received")}</p>
                 <p className="text-2xl font-bold text-primary">₹{payment.amount}</p>
-                <p className="text-xs text-muted-foreground mt-1">via {payment.payment_mode}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("collector.confirm_handover.via_mode", { mode: payment.payment_mode })}</p>
               </div>
             )}
             <Button
               className="w-full mt-2 bg-green-600 hover:bg-green-700"
               onClick={() => navigate("/collector")}
             >
-              Back to Dashboard
+              {t("collector.confirm_handover.back_to_dashboard")}
             </Button>
           </CardContent>
         </Card>
@@ -105,7 +105,7 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-lg font-bold">Total Amount</span>
+                <span className="text-lg font-bold">{t("collector.confirm_handover.total_amount")}</span>
                 <span className="text-3xl font-black text-primary">₹{handover.final_amount}</span>
               </div>
             </CardContent>
@@ -117,7 +117,7 @@ export default function ConfirmHandover() { const { t } = useI18nStore();
               onClick={handleConfirm}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Confirming..." : "Confirm & Accept"}
+              {isSubmitting ? t("collector.confirm_handover.confirming") : t("collector.confirm_handover.confirm_and_accept")}
             </Button>
           </div>
         </>

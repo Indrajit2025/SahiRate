@@ -15,7 +15,12 @@ export const en = {
     unknown_material: "Unknown Material",
     error_occurred: "An error occurred",
     no_data: "No data available",
-    search: "Search"
+    search: "Search",
+    go_back_dashboard: "Go back to Dashboard",
+    go_back_history: "Go back to History",
+    play_audio: "Play audio",
+    audio_unavailable: "Audio not yet available",
+    del: "DEL"
   },
   status: {
     available: "Available",
@@ -70,7 +75,8 @@ export const en = {
       confirm_save: "Confirm & Save",
       saving: "Saving...",
       next: "Next",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      photo_failed: "Failed to process photo."
     },
     earnings: {
       title: "My Earnings",
@@ -141,7 +147,8 @@ export const en = {
       reference_id: "Reference ID",
       find_handover: "Find Handover",
       invalid_qr: "Invalid QR code format",
-      cross_device_disclaimer: "Note: In this local demo, cross-device scanning is simulated. Real scanning works in M12."
+      cross_device_disclaimer: "Note: In this local demo, cross-device scanning is simulated. Real scanning works in M12.",
+      invalid_qr_data: "Invalid QR code data. Make sure you scan a valid SahiRate Handover QR."
     },
     confirm_handover: {
       title: "Confirm Handover",
@@ -153,7 +160,17 @@ export const en = {
       confirming: "Confirming...",
       success: "Handover Confirmed!",
       return_home: "Return to Home",
-      error_not_found: "Handover not found or not in QR generated state."
+      error_not_found: "Handover not found or not in QR generated state.",
+      review_title: "Review Handover",
+      not_found: "Handover not found",
+      confirmed: "Confirmed!",
+      confirmed_desc: "Handover confirmed. Waiting for the recycler to finalize and process payment.",
+      payment_received: "Payment Received",
+      via_mode: "via {{mode}}",
+      back_to_dashboard: "Back to Dashboard",
+      total_amount: "Total Amount",
+      confirm_and_accept: "Confirm & Accept",
+      failed_confirm: "Failed to confirm handover"
     }
   }
 };

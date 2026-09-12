@@ -17,7 +17,12 @@ export const mr: TranslationType = {
     unknown_material: "अज्ञात सामग्री",
     error_occurred: "एक त्रुटी आली",
     no_data: "कोणताही डेटा उपलब्ध नाही",
-    search: "शोधा"
+    search: "शोधा",
+    go_back_dashboard: "डॅशबोर्डवर परत जा",
+    go_back_history: "इतिहासवर परत जा",
+    play_audio: "ऑडिओ प्ले करा",
+    audio_unavailable: "ऑडिओ अद्याप उपलब्ध नाही",
+    del: "काढून टाका"
   },
   status: {
     available: "उपलब्ध",
@@ -72,7 +77,8 @@ export const mr: TranslationType = {
       confirm_save: "पुष्टी करा आणि जतन करा",
       saving: "जतन करत आहे...",
       next: "पुढे",
-      cancel: "रद्द करा"
+      cancel: "रद्द करा",
+      photo_failed: "फोटो प्रक्रिया करण्यात अयशस्वी."
     },
     earnings: {
       title: "माझी कमाई",
@@ -143,7 +149,8 @@ export const mr: TranslationType = {
       reference_id: "संदर्भ आयडी",
       find_handover: "हँडओव्हर शोधा",
       invalid_qr: "अवैध QR कोड स्वरूप",
-      cross_device_disclaimer: "टीप: या स्थानिक डेमोमध्ये, क्रॉस-डिव्हाइस स्कॅनिंग अनुकरण केले आहे. वास्तविक स्कॅनिंग M12 मध्ये कार्य करेल."
+      cross_device_disclaimer: "टीप: या स्थानिक डेमोमध्ये, क्रॉस-डिव्हाइस स्कॅनिंग अनुकरण केले आहे. वास्तविक स्कॅनिंग M12 मध्ये कार्य करेल.",
+      invalid_qr_data: "अवैध QR कोड डेटा. तुम्ही एक वैध सहीरेट हँडओव्हर QR स्कॅन करत आहात याची खात्री करा."
     },
     confirm_handover: {
       title: "हँडओव्हरची पुष्टी करा",
@@ -155,7 +162,17 @@ export const mr: TranslationType = {
       confirming: "पुष्टी करत आहे...",
       success: "हँडओव्हर पुष्टी केली!",
       return_home: "होम वर परत जा",
-      error_not_found: "हँडओव्हर सापडला नाही किंवा QR व्युत्पन्न स्थितीत नाही."
+      error_not_found: "हँडओव्हर सापडला नाही किंवा QR व्युत्पन्न स्थितीत नाही.",
+      review_title: "हँडओव्हरचे पुनरावलोकन करा",
+      not_found: "हँडओव्हर सापडला नाही",
+      confirmed: "पुष्टी झाली!",
+      confirmed_desc: "हँडओव्हर पुष्टी केली. रिसायकलरने अंतिम रूप देण्याची आणि पेमेंट प्रक्रिया करण्याची प्रतीक्षा करत आहे.",
+      payment_received: "पेमेंट प्राप्त झाले",
+      via_mode: "{{mode}} द्वारे",
+      back_to_dashboard: "डॅशबोर्डवर परत जा",
+      total_amount: "एकूण रक्कम",
+      confirm_and_accept: "पुष्टी करा आणि स्वीकारा",
+      failed_confirm: "हँडओव्हर पुष्टी करण्यात अयशस्वी"
     }
   }
 };

@@ -17,7 +17,12 @@ export const hi: TranslationType = {
     unknown_material: "अज्ञात सामग्री",
     error_occurred: "एक त्रुटि हुई",
     no_data: "कोई डेटा उपलब्ध नहीं",
-    search: "खोजें"
+    search: "खोजें",
+    go_back_dashboard: "डैशबोर्ड पर वापस जाएं",
+    go_back_history: "इतिहास पर वापस जाएं",
+    play_audio: "ऑडियो चलाएं",
+    audio_unavailable: "ऑडियो अभी उपलब्ध नहीं है",
+    del: "हटाएं"
   },
   status: {
     available: "उपलब्ध",
@@ -72,7 +77,8 @@ export const hi: TranslationType = {
       confirm_save: "पुष्टि करें और सहेजें",
       saving: "सहेजा जा रहा है...",
       next: "आगे",
-      cancel: "रद्द करें"
+      cancel: "रद्द करें",
+      photo_failed: "तस्वीर संसाधित करने में विफल।"
     },
     earnings: {
       title: "मेरी कमाई",
@@ -143,7 +149,8 @@ export const hi: TranslationType = {
       reference_id: "संदर्भ आईडी",
       find_handover: "हैंडओवर खोजें",
       invalid_qr: "अमान्य QR कोड प्रारूप",
-      cross_device_disclaimer: "नोट: इस स्थानीय डेमो में, क्रॉस-डिवाइस स्कैनिंग नकली है। असली स्कैनिंग M12 में काम करेगी।"
+      cross_device_disclaimer: "नोट: इस स्थानीय डेमो में, क्रॉस-डिवाइस स्कैनिंग नकली है। असली स्कैनिंग M12 में काम करेगी।",
+      invalid_qr_data: "अमान्य QR कोड डेटा। सुनिश्चित करें कि आप एक मान्य सहीरेट हैंडओवर QR स्कैन कर रहे हैं।"
     },
     confirm_handover: {
       title: "हैंडओवर की पुष्टि करें",
@@ -155,7 +162,17 @@ export const hi: TranslationType = {
       confirming: "पुष्टि की जा रही है...",
       success: "हैंडओवर की पुष्टि हो गई!",
       return_home: "होम पर वापस जाएं",
-      error_not_found: "हैंडओवर नहीं मिला या QR उत्पन्न स्थिति में नहीं है।"
+      error_not_found: "हैंडओवर नहीं मिला या QR उत्पन्न स्थिति में नहीं है।",
+      review_title: "हैंडओवर की समीक्षा करें",
+      not_found: "हैंडओवर नहीं मिला",
+      confirmed: "पुष्टि हो गई!",
+      confirmed_desc: "हैंडओवर की पुष्टि हो गई। रिसाइकलर द्वारा अंतिम रूप देने और भुगतान संसाधित करने की प्रतीक्षा की जा रही है।",
+      payment_received: "भुगतान प्राप्त हुआ",
+      via_mode: "{{mode}} के माध्यम से",
+      back_to_dashboard: "डैशबोर्ड पर वापस जाएं",
+      total_amount: "कुल राशि",
+      confirm_and_accept: "पुष्टि करें और स्वीकार करें",
+      failed_confirm: "हैंडओवर की पुष्टि करने में विफल"
     }
   }
 };

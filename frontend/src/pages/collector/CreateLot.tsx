@@ -259,7 +259,7 @@ function PhotoStep() {
     } catch (err) {
       console.error("Failed to compress/save image:", err);
       setPreviewUri(null); // Clear preview state if it failed
-      alert("Failed to process photo.");
+      alert(t("collector.create.photo_failed"));
     } finally {
       setProcessing(false);
       // Reset inputs so the user can try again if they want

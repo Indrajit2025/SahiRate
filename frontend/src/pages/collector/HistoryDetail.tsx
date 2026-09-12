@@ -33,7 +33,7 @@ export default function HistoryDetail() { const { t } = useI18nStore();
         <button
           onClick={() => navigate("/collector/history")}
           className="mr-4 text-muted-foreground hover:text-foreground"
-          aria-label="Go back to History"
+          aria-label={t("common.go_back_history")}
         >
           <ChevronLeft className="w-6 h-6" />
         </button>

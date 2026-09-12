@@ -52,8 +52,8 @@ export default function Safety() {
                   size="icon"
                   className="rounded-full text-muted-foreground bg-muted"
                   disabled
-                  aria-label="Play audio"
-                  title="Audio not yet available"
+                  aria-label={t("common.play_audio")}
+                  title={t("common.audio_unavailable")}
                 >
                   <Volume2 className="w-5 h-5" />
                 </Button>
