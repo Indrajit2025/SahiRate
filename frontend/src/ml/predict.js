@@ -4,8 +4,8 @@ import { nms } from './nms'
 import { loadImage, preprocess } from './preprocess'
 
 
-// Add this line to bypass the local 25MB limit:
-ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+//  to bypass the local 25MB limit:
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.30.0/dist/';
 
 let sessionPromise
 const now = () => performance.now()
