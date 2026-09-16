@@ -251,6 +251,7 @@ app.add_middleware(
         'https://www.sahirate.indrajit.in.net'
         "https://sahirate.pages.dev"  
     ],
+    allow_origin_regex=r"https://.*\.sahirate\.pages\.dev",
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
