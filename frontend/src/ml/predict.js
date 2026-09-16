@@ -3,6 +3,10 @@ import { MODEL_URL, MODEL_SIZE, PROTOTYPE_STRIDE, CLASS_NAMES } from './settings
 import { nms } from './nms'
 import { loadImage, preprocess } from './preprocess'
 
+
+// Add this line to bypass the local 25MB limit:
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+
 let sessionPromise
 const now = () => performance.now()
 const sigmoid = (value) => 1 / (1 + Math.exp(-value))
