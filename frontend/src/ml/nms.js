@@ -1,0 +1,2 @@
+export function iou(a, b) { const x1 = Math.max(a.x1, b.x1), y1 = Math.max(a.y1, b.y1), x2 = Math.min(a.x2, b.x2), y2 = Math.min(a.y2, b.y2); const intersection = Math.max(0, x2 - x1) * Math.max(0, y2 - y1); return intersection / (a.area + b.area - intersection || 1) }
+export function nms(detections, threshold) { const kept = []; for (const candidate of [...detections].sort((a, b) => b.score - a.score)) if (!kept.some((accepted) => accepted.classId === candidate.classId && iou(candidate, accepted) > threshold)) kept.push(candidate); return kept }
