@@ -247,8 +247,9 @@ app.add_middleware(
     allow_origins=[
         'http://localhost:5173', 
         'http://127.0.0.1:5173',
-        'https://sahirate.indrajit.in.net',       # <-- Add your actual custom domain
-        'https://www.sahirate.indrajit.in.net'    # <-- Add the www version just in case
+        'https://sahirate.indrajit.in.net',     
+        'https://www.sahirate.indrajit.in.net'
+        "https://sahirate.pages.dev"  
     ],
     allow_credentials=True,
     allow_methods=['*'],
