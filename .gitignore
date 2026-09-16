@@ -28,3 +28,11 @@ Thumbs.db
 
 # Local caches
 .cache/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.db
+*.sqlite3
