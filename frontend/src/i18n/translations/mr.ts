@@ -95,10 +95,14 @@ export const mr = {
     "stable": "Stable"
   },
   "material": {
-    "PCB": "PCB Board",
-    "CABLE": "Wires",
-    "BATTERY": "Battery",
-    "DISPLAY": "Screen"
+    "PCB": "पीसीबी बोर्ड",
+    "WIRE": "वायर",
+    "CABLE": "वायर",
+    "BATTERY": "बॅटरी",
+    "DISPLAY": "डिस्प्ले स्क्रीन",
+    "MOTOR": "मोटर",
+    "METAL": "धातू",
+    "PLASTIC": "प्लॅस्टिक"
   },
   "collector": {
     "nav": {

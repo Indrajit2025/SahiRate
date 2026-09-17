@@ -96,9 +96,13 @@ export const hi = {
   },
   "material": {
     "PCB": "पीसीबी बोर्ड",
-    "CABLE": "तारें",
+    "WIRE": "तार",
+    "CABLE": "तार",
     "BATTERY": "बैटरी",
-    "DISPLAY": "स्क्रीन"
+    "DISPLAY": "डिस्प्ले स्क्रीन",
+    "MOTOR": "मोटर",
+    "METAL": "धातु",
+    "PLASTIC": "प्लास्टिक"
   },
   "collector": {
     "nav": {

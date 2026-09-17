@@ -96,9 +96,13 @@ export const en = {
   },
   "material": {
     "PCB": "PCB Board",
-    "CABLE": "Wires",
+    "WIRE": "Wire",
+    "CABLE": "Wire",
     "BATTERY": "Battery",
-    "DISPLAY": "Screen"
+    "DISPLAY": "Display",
+    "MOTOR": "Motor",
+    "METAL": "Metal",
+    "PLASTIC": "Plastic"
   },
   "collector": {
     "home": {

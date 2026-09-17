@@ -95,10 +95,14 @@ export const bn = {
     "stable": "Stable"
   },
   "material": {
-    "PCB": "PCB Board",
-    "CABLE": "Wires",
-    "BATTERY": "Battery",
-    "DISPLAY": "Screen"
+    "PCB": "পিসিবি বোর্ড",
+    "WIRE": "তার",
+    "CABLE": "তার",
+    "BATTERY": "ব্যাটারি",
+    "DISPLAY": "ডিসপ্লে স্ক্রিন",
+    "MOTOR": "মোটর",
+    "METAL": "ধাতু",
+    "PLASTIC": "প্লাস্টিক"
   },
   "collector": {
     "nav": {

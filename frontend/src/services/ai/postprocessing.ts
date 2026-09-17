@@ -16,12 +16,14 @@ export function postprocess(
   confThreshold = 0.25,
   iouThreshold = 0.45
 ): Detection[] {
-  // Output0 shape: [1, 39, 8400] for 7 classes
+  // Output0 shape: [1, 43, 8400] (4 coords + 7 classes + 32 mask coeffs)
   const numBoxes = 8400;
   const numClasses = 7;
   const maskChannels = 32;
 
-  const CLASSES = ["BATTERY", "CABLE", "DISPLAY", "METAL", "MOTOR", "PCB", "PLASTIC"];
+  // Exact YOLO11 model class order from training metadata:
+  // 0: Battary, 1: Display, 2: Motor, 3: PCB, 4: Wire, 5: metal, 6: plastic
+  const CLASSES = ["BATTERY", "DISPLAY", "MOTOR", "PCB", "WIRE", "METAL", "PLASTIC"];
 
   let detections: Detection[] = [];
 

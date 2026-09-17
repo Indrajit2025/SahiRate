@@ -1,5 +1,6 @@
 export const CLASS_COLORS: Record<string, { stroke: string; fill: string; rgb: [number, number, number] }> = {
   BATTERY: { stroke: "#e11d48", fill: "rgba(225, 29, 72, 0.35)", rgb: [225, 29, 72] },
+  WIRE: { stroke: "#f59e0b", fill: "rgba(245, 158, 11, 0.35)", rgb: [245, 158, 11] },
   CABLE: { stroke: "#f59e0b", fill: "rgba(245, 158, 11, 0.35)", rgb: [245, 158, 11] },
   DISPLAY: { stroke: "#3b82f6", fill: "rgba(59, 130, 246, 0.35)", rgb: [59, 130, 246] },
   METAL: { stroke: "#64748b", fill: "rgba(100, 116, 139, 0.35)", rgb: [100, 116, 139] },

@@ -1,10 +1,12 @@
-import * as ort from "onnxruntime-web";
+import * as ort from "onnxruntime-web/wasm";
 import { preprocessImage } from "./preprocessing";
 import { postprocess, generateOverlay } from "./postprocessing";
 import type { Detection } from "./postprocessing";
 
 // Configure WASM paths and single-threaded execution (avoids SharedArrayBuffer & COOP/COEP requirements)
-ort.env.wasm.wasmPaths = "/wasm/";
+ort.env.wasm.wasmPaths = {
+  wasm: "/wasm/ort-wasm-simd-threaded.wasm",
+};
 ort.env.wasm.numThreads = 1;
 
 let session: ort.InferenceSession | null = null;
@@ -134,7 +136,6 @@ export async function classifyMaterial(
   const mapMaterial = (className: string) => {
     let id = className.toUpperCase();
     if (id === "BATTARY") id = "BATTERY";
-    if (id === "WIRE") id = "CABLE";
     return id;
   };
 

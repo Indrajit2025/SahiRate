@@ -95,10 +95,14 @@ export const or = {
     "stable": "Stable"
   },
   "material": {
-    "PCB": "PCB Board",
-    "CABLE": "Wires",
-    "BATTERY": "Battery",
-    "DISPLAY": "Screen"
+    "PCB": "ପିସିବି ବୋର୍ଡ",
+    "WIRE": "ତାର",
+    "CABLE": "ତାର",
+    "BATTERY": "ବ୍ୟାଟେରୀ",
+    "DISPLAY": "ଡିସପ୍ଲେ ସ୍କ୍ରିନ୍",
+    "MOTOR": "ମୋଟର",
+    "METAL": "ଧାତୁ",
+    "PLASTIC": "ପ୍ଲାଷ୍ଟିକ୍"
   },
   "collector": {
     "nav": {

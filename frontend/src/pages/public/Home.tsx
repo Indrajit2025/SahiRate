@@ -3,6 +3,7 @@ import { useTranslation } from "@/i18n";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScanLine, Tag, Activity, ArrowRight, Camera } from "lucide-react";
+import { DEMO_REF_RATES } from "@/services/refRates";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -61,26 +62,56 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Today's Local Rates */}
-      <div className="pt-2 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-charcoal tracking-tight">{t("public.landing.today_rates")}</h2>
-          <span className="text-[10px] bg-amber-100/80 text-amber-800 border border-amber-200 px-2 py-1 rounded-md font-bold uppercase tracking-wider">
-            {t("public.landing.demo_notice")}
-          </span>
-        </div>
-        
-        <Card className="border-warm-borders bg-white shadow-sm overflow-hidden rounded-2xl">
-          <div className="divide-y divide-warm-borders">
-            {[
-              { id: 'pcb', name: t("public.rates.pcb"), price: '₹110/kg' },
-              { id: 'copper', name: t("public.rates.copper"), price: '₹640/kg' },
-              { id: 'aluminium', name: t("public.rates.aluminium"), price: '₹165/kg' }
-            ].map((item) => (
-              <div key={item.id} className="flex justify-between items-center p-4 hover:bg-surface/50 transition-colors">
-                <span className="font-bold text-charcoal">{item.name}</span>
-                <span className="text-xl font-bold text-primary font-mono tracking-tight">{item.price}</span>
-              </div>
+      {/* Market Snapshot - Today's Prices */}
+      <div className="pt-2">
+        <Card className="border-warm-borders bg-white shadow-sm rounded-3xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-extrabold text-muted-foreground uppercase tracking-widest">
+              MARKET SNAPSHOT
+            </span>
+            <Link to="/rates" className="text-xs font-bold text-copper hover:text-copper/80 flex items-center gap-1 group transition-colors">
+              See all <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="flex items-baseline justify-between border-b border-warm-borders/40 pb-3">
+            <h2 className="text-2xl font-extrabold text-charcoal tracking-tight">
+              Today's prices
+            </h2>
+            <span className="text-[10px] bg-amber-100/80 text-amber-800 border border-amber-200 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+              {t("public.landing.demo_notice")}
+            </span>
+          </div>
+
+          <div className="divide-y divide-warm-borders/60">
+            {DEMO_REF_RATES.filter(r => r.id !== "CABLE").map((item) => (
+              <Link
+                key={item.id}
+                to="/rates"
+                className="py-3.5 flex items-center justify-between hover:bg-surface/50 rounded-xl px-1 -mx-1 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  {/* Modern orange diamond glyph */}
+                  <div className="w-6 h-6 rotate-45 rounded-[4px] border-2 border-copper/80 bg-copper/10 flex items-center justify-center shrink-0">
+                    <div className="w-1.5 h-1.5 bg-copper rounded-[1px]" />
+                  </div>
+                  <div>
+                    <p className="font-extrabold text-charcoal text-[15px] tracking-tight uppercase group-hover:text-primary transition-colors">
+                      {item.label}
+                    </p>
+                    <p className="text-[11px] font-medium text-muted-foreground">
+                      {item.observations || 18} observations
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 font-mono">
+                  <span className="font-extrabold text-charcoal text-base">
+                    ₹{item.min} - ₹{item.max}/{item.unitLabel}
+                  </span>
+                  <span className="text-emerald-600 font-bold text-base select-none">↑</span>
+                </div>
+              </Link>
             ))}
           </div>
         </Card>

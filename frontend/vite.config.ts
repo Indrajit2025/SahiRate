@@ -66,4 +66,7 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    exclude: ["onnxruntime-web"]
+  }
 });

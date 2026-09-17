@@ -14,7 +14,11 @@ import {
   Camera,
   RefreshCw,
   Box,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Cog,
+  Layers,
+  Recycle,
+  Edit3
 } from "lucide-react";
 import { useCreateLotStore } from "@/stores/createLotStore";
 import { createLocalLot } from "@/services/lots";
@@ -25,13 +29,14 @@ import { useSyncStore } from "@/stores/syncStore";
 import { useTranslation } from "@/i18n";
 
 const MATERIALS = [
-  { id: "PCB", label: "PCB", icon: Cpu, min: 110, max: 135 },
-  { id: "CABLE", label: "Cable", icon: Cable, min: 60, max: 80 },
-  { id: "BATTERY", label: "Battery", icon: Battery, min: 72, max: 110 },
-  { id: "DISPLAY", label: "Display", icon: Monitor, min: 40, max: 50 },
-  { id: "METAL", label: "Metal", icon: Box, min: 20, max: 30 },
-  { id: "PLASTIC", label: "Plastic", icon: Box, min: 10, max: 25 },
-  { id: "MOTOR", label: "Motor", icon: Box, min: 45, max: 60 },
+  { id: "BATTERY", label: "Battery", icon: Battery, min: 80, max: 100, unit: "kg", unitLabel: "kg" },
+  { id: "DISPLAY", label: "Display", icon: Monitor, min: 450, max: 520, unit: "piece", unitLabel: "display" },
+  { id: "MOTOR", label: "Motor", icon: Cog, min: 450, max: 580, unit: "kg", unitLabel: "kg" },
+  { id: "PCB", label: "PCB", icon: Cpu, min: 90, max: 110, unit: "piece", unitLabel: "board" },
+  { id: "WIRE", label: "Wire", icon: Cable, min: 980, max: 1050, unit: "kg", unitLabel: "kg" },
+  { id: "METAL", label: "Metal", icon: Layers, min: 120, max: 175, unit: "kg", unitLabel: "kg" },
+  { id: "PLASTIC", label: "Plastic", icon: Recycle, min: 75, max: 90, unit: "kg", unitLabel: "kg" },
+  { id: "CABLE", label: "Wire", icon: Cable, min: 980, max: 1050, unit: "kg", unitLabel: "kg" }, // Alias for backwards compatibility
 ];
 
 function ProgressIndicator({ currentStep }: { currentStep: string }) {
@@ -204,15 +209,29 @@ function AiScanStep() {
                 
                 {aiResult.otherMaterials && aiResult.otherMaterials.length > 0 && (
                   <div className="mt-4 border-t-2 border-dashed border-warm-borders pt-4">
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
-                      {t("collector.create.detected_material")}
-                    </p>
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {t("collector.create.detected_material")}
+                      </p>
+                      <span className="text-[10px] text-muted-foreground">Tap to select</span>
+                    </div>
                     <div className="flex flex-col gap-2">
                       {aiResult.otherMaterials.map((om: any, idx: number) => (
-                        <div key={idx} className="flex justify-between items-center bg-white p-2.5 rounded-lg border border-warm-borders shadow-sm">
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setMaterial(om.materialId.toUpperCase());
+                            setAiConfidence(om.confidencePercent);
+                          }}
+                          className="flex justify-between items-center bg-white p-2.5 rounded-lg border border-warm-borders hover:border-primary shadow-sm active:scale-[0.98] transition-all text-left w-full"
+                        >
                           <span className="font-bold text-charcoal text-sm">{om.material}</span>
-                          <span className="text-xs font-bold text-muted-foreground bg-surface px-2 py-1 rounded border border-warm-borders">{om.confidencePercent}%</span>
-                        </div>
+                          <div className="flex items-center gap-2 font-mono">
+                            <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded">Select</span>
+                            <span className="text-xs font-bold text-muted-foreground bg-surface px-2 py-1 rounded border border-warm-borders">{om.confidencePercent}%</span>
+                          </div>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -230,8 +249,9 @@ function AiScanStep() {
                   <Button size="lg" className="h-14 text-lg bg-primary hover:bg-primary/90 text-white rounded-xl active:scale-[0.98] transition-transform" onClick={handleConfirmAi}>
                     ✓ {t("collector.create.use_this_material")}
                   </Button>
-                  <Button variant="outline" className="h-14 text-lg border-2 border-warm-borders text-charcoal bg-surface hover:bg-warm-borders/40 rounded-xl active:scale-[0.98] transition-transform" onClick={() => setStep("material")}>
-                    {t("collector.create.choose_another")}
+                  <Button variant="outline" className="h-14 text-base border-2 border-warm-borders text-charcoal bg-surface hover:bg-warm-borders/40 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" onClick={() => setStep("material")}>
+                    <Edit3 className="w-4 h-4 text-primary" />
+                    <span>Edit / Choose Correct Material (Manual)</span>
                   </Button>
                 </div>
               </div>
@@ -319,6 +339,8 @@ function WeightStep() {
 
   const handleDel = () => setVal((v) => v.slice(0, -1));
   const material = MATERIALS.find((m) => m.id === material_id);
+  const isPiece = material?.unit === "piece";
+  const unitLabel = material?.unitLabel || (isPiece ? "display" : "kg");
 
   const parsedWeight = parseFloat(val);
   const isValid = val !== "" && !isNaN(parsedWeight) && parsedWeight > 0 && parsedWeight <= MAX_WEIGHT && !val.endsWith(".");
@@ -328,7 +350,9 @@ function WeightStep() {
 
   return (
     <div className="space-y-4 flex flex-col items-center animate-in fade-in slide-in-from-right-4 pb-4 w-full">
-      <h2 className="text-2xl font-extrabold text-charcoal text-center tracking-tight">{t("collector.create.enter_weight")}</h2>
+      <h2 className="text-2xl font-extrabold text-charcoal text-center tracking-tight">
+        {isPiece ? "Enter Quantity" : t("collector.create.enter_weight")}
+      </h2>
       <AudioGuidance audioKey="collector.create.enter_weight" />
       
       <div className="flex items-center gap-2 text-primary font-bold bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
@@ -339,32 +363,84 @@ function WeightStep() {
       </div>
 
       <div className="w-full bg-[#0A2928] text-[#E0F2F1] rounded-2xl p-4 shadow-inner border border-charcoal relative overflow-hidden flex flex-col justify-between h-[120px]">
-        <div className="flex justify-between text-[10px] font-bold text-[#E0F2F1]/60 uppercase tracking-widest">
-          <span>Gross <span className="text-[#E0F2F1]">{val || "0"} kg</span></span>
-          <span>Tare <span className="text-[#E0F2F1]">0.0 kg</span></span>
-        </div>
+        {isPiece ? (
+          <div className="flex justify-between text-[10px] font-bold text-[#E0F2F1]/60 uppercase tracking-widest">
+            <span>Mode <span className="text-[#E0F2F1]">Piece Count</span></span>
+            <span>Rate <span className="text-[#E0F2F1]">₹{avgPrice}/{unitLabel}</span></span>
+          </div>
+        ) : (
+          <div className="flex justify-between text-[10px] font-bold text-[#E0F2F1]/60 uppercase tracking-widest">
+            <span>Gross <span className="text-[#E0F2F1]">{val || "0"} kg</span></span>
+            <span>Tare <span className="text-[#E0F2F1]">0.0 kg</span></span>
+          </div>
+        )}
         <div className="text-right flex items-baseline justify-end gap-2">
-          <span className="text-sm font-bold text-[#E0F2F1]/60 uppercase tracking-widest pb-1">Net</span>
+          <span className="text-sm font-bold text-[#E0F2F1]/60 uppercase tracking-widest pb-1">
+            {isPiece ? "Count" : "Net"}
+          </span>
           <span className="text-[44px] leading-none font-bold font-mono">{val || "0"}</span> 
-          <span className="text-xl font-medium text-[#E0F2F1]/60">kg</span>
+          <span className="text-xl font-medium text-[#E0F2F1]/60">{unitLabel}</span>
         </div>
       </div>
 
-      <div className="flex w-full justify-between items-center bg-surface px-4 py-3 rounded-xl border border-warm-borders">
-        <div className="flex flex-col">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t("common.rate")}</span>
-          <span className="text-sm font-bold text-charcoal font-mono">₹{avgPrice}/kg</span>
+      {/* Simplified 3-Box Calculation Layout: [ Count or Mass | Current Price | Estimated Value ] */}
+      <div className="grid grid-cols-3 gap-2 w-full">
+        {/* Box 1: Count or Mass */}
+        <div className="bg-white p-3 rounded-xl border-2 border-warm-borders flex flex-col justify-between items-center text-center shadow-sm">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            {isPiece ? "Count" : "Mass"}
+          </span>
+          <div className="my-1">
+            <span className="text-xl font-extrabold text-charcoal font-mono leading-none">
+              {val || "0"}
+            </span>
+            <span className="text-xs font-semibold text-muted-foreground ml-0.5">
+              {unitLabel}
+            </span>
+          </div>
+          <span className="text-[9px] font-medium text-muted-foreground">
+            {isPiece ? "Quantity" : "Net Weight"}
+          </span>
         </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t("common.amount")}</span>
-          <span className="text-lg font-extrabold text-primary font-mono">₹{estimatedValue.toLocaleString()}</span>
+
+        {/* Box 2: Current Price */}
+        <div className="bg-white p-3 rounded-xl border-2 border-warm-borders flex flex-col justify-between items-center text-center shadow-sm">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+            Current Rate
+          </span>
+          <div className="my-1">
+            <span className="text-xl font-extrabold text-charcoal font-mono leading-none">
+              ₹{avgPrice}
+            </span>
+            <span className="text-xs font-semibold text-muted-foreground ml-0.5">
+              /{unitLabel}
+            </span>
+          </div>
+          <span className="text-[9px] font-mono text-muted-foreground truncate max-w-full">
+            ₹{material?.min}–{material?.max}
+          </span>
+        </div>
+
+        {/* Box 3: Estimated Value */}
+        <div className="bg-primary/5 p-3 rounded-xl border-2 border-primary/30 flex flex-col justify-between items-center text-center shadow-sm">
+          <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+            Est. Value
+          </span>
+          <div className="my-1">
+            <span className="text-xl font-extrabold text-primary font-mono leading-none">
+              ₹{estimatedValue.toLocaleString()}
+            </span>
+          </div>
+          <span className="text-[9px] font-mono text-primary/80 truncate max-w-full">
+            {isValid ? `₹${Math.round((material?.min || avgPrice) * parsedWeight)}–${Math.round((material?.max || avgPrice) * parsedWeight)}` : "Qty × Rate"}
+          </span>
         </div>
       </div>
 
       <div className="flex w-full gap-2 mt-1">
-        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(1)}>+1 kg</Button>
-        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(5)}>+5 kg</Button>
-        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(10)}>+10 kg</Button>
+        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(1)}>+1 {unitLabel}</Button>
+        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(5)}>+5 {unitLabel}</Button>
+        <Button variant="outline" className="flex-1 h-12 border-warm-borders text-primary font-bold bg-primary/5 hover:bg-primary/10 active:scale-95" onClick={() => handleAdd(10)}>+10 {unitLabel}</Button>
       </div>
 
       <div className="grid grid-cols-3 gap-2 w-full mt-1">
@@ -423,6 +499,8 @@ function ConfirmStep() {
   const [savedLocally, setSavedLocally] = useState(false);
 
   const material = MATERIALS.find(m => m.id === material_id);
+  const isPiece = material?.unit === "piece";
+  const unitLabel = material?.unitLabel || (isPiece ? "display" : "kg");
   const [photoUri, setPhotoUri] = useState<string | null>(null);
 
   useEffect(() => {
@@ -463,7 +541,7 @@ function ConfirmStep() {
         <Card className="w-full bg-[#FAF8F3] border border-[#DDD8CC] shadow-sm rounded-xl p-4">
           <div className="flex justify-between items-center text-charcoal font-bold">
             <span>{t(`material.${material?.id}` as any) || material?.label}</span>
-            <span>{approx_weight_kg} kg</span>
+            <span>{approx_weight_kg} {unitLabel}</span>
           </div>
           <div className="text-primary font-mono font-bold text-xl mt-2 text-right">
             ₹{estimated_value?.toLocaleString()} {t("common.amount")}
@@ -497,8 +575,10 @@ function ConfirmStep() {
           </div>
 
           <div className="flex justify-between items-center">
-            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{t("common.weight")}</p>
-            <p className="font-extrabold text-[17px] text-charcoal">{approx_weight_kg} kg</p>
+            <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+              {isPiece ? "Quantity" : t("common.weight")}
+            </p>
+            <p className="font-extrabold text-[17px] text-charcoal">{approx_weight_kg} {unitLabel}</p>
           </div>
 
           {photoUri && (
@@ -508,10 +588,19 @@ function ConfirmStep() {
              </div>
           )}
 
-          <div className="border-t-2 border-dashed border-[#CBC5B4] pt-4 space-y-3">
+          <div className="border-t-2 border-dashed border-[#CBC5B4] pt-4 space-y-2.5">
             <div className="flex justify-between items-center">
                <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{t("common.rate")}</p>
-               <p className="font-bold text-[14px] text-charcoal font-mono tracking-tight">₹{Math.round((estimated_value || 0) / (approx_weight_kg || 1))} / kg</p>
+               <p className="font-bold text-[14px] text-charcoal font-mono tracking-tight">
+                 ₹{material ? Math.round((material.min + material.max) / 2) : Math.round((estimated_value || 0) / (approx_weight_kg || 1))} / {unitLabel}
+               </p>
+            </div>
+
+            <div className="flex justify-between items-center text-xs text-muted-foreground font-mono">
+               <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Calculation</p>
+               <p className="font-bold text-charcoal">
+                 {approx_weight_kg} {unitLabel} × ₹{material ? Math.round((material.min + material.max) / 2) : Math.round((estimated_value || 0) / (approx_weight_kg || 1))}/{unitLabel}
+               </p>
             </div>
             
             <div className="bg-primary text-white p-4 rounded mt-2 flex justify-between items-center shadow-inner">
