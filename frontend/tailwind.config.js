@@ -8,7 +8,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
+        background: "#F7F5EE",
+        surface: "#FAF8F3",
+        primary: {
+          DEFAULT: "#174C4A",
+          foreground: "#ffffff"
+        },
+        copper: "#C56A3D",
+        charcoal: "#18211F",
+        "soft-sage": "#DCE9E3",
+        "warm-borders": "#DDD8CC",
+        "warm-borders-dark": "#CBC5B4",
+        amber: {
+          caution: "#D97706"
+        },
+        success: {
+          DEFAULT: "#15803D"
+        },
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",
@@ -17,10 +33,6 @@ export default {
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))"
-        },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -38,7 +50,7 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))"
         },
-        border: "hsl(var(--border))",
+        border: "#DDD8CC",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {
@@ -53,6 +65,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)"
+      },
+      fontFamily: {
+        sans: ['"Space Grotesk"', '"Noto Sans Devanagari"', '"Noto Sans Bengali"', '"Noto Sans Oriya"', 'sans-serif'],
       }
     }
   },

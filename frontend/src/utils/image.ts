@@ -34,11 +34,12 @@ export async function compressImageForLocalDb(
         ctx.drawImage(img, 0, 0, width, height);
         const dataUri = canvas.toDataURL("image/jpeg", quality);
 
+        // Safe to revoke after canvas has extracted pixels
+        URL.revokeObjectURL(objectUrl);
         resolve(dataUri);
       } catch (err) {
-        reject(err);
-      } finally {
         URL.revokeObjectURL(objectUrl);
+        reject(err);
       }
     };
 

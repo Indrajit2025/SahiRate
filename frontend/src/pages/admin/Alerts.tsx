@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { getAdminAlerts, updateAdminAlert } from "@/services/admin/adminDemo";
 import type { AdminAlertStatus, AdminAlertSeverity } from "@/services/admin/adminDemo";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { AlertTriangle, AlertCircle, Info, FilterX, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function AdminAlerts() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   // Force re-render on demo update
   const [refreshToggle, setRefreshToggle] = useState(0);

@@ -5,36 +5,32 @@ export interface ISyncTransport {
   sendEvent(event: OutboxEvent): Promise<void>;
 }
 
-/**
- * MOCK/DEMO TRANSPORT
- * This simulates network latency and allows deterministic failures for testing.
- * In M12, this will be completely replaced by FastAPITransport without changing the sync manager.
- */
 class MockTransport implements ISyncTransport {
   async sendEvent(event: OutboxEvent): Promise<void> {
     console.log(`[MockTransport] Sending event: ${event.type} (ID: ${event.id})`);
-    console.log(`[MockTransport] Idempotency Key: ${event.idempotency_key}`);
-    // Consume flag before the await to ensure it captures the exact intent reliably
     const shouldFail = useSyncStore.getState().failNextSync;
     if (shouldFail) {
       useSyncStore.getState().setFailNextSync(false);
     }
     
-    // Check actual connectivity, because navigator.onLine can lie.
-    // Fetch an un-cached endpoint. If truly offline, this throws instantly.
     try {
-      await fetch(`/api/mock-ping?_t=${Date.now()}`, { method: 'HEAD', cache: 'no-store' });
+      // Use / instead of /api/mock-ping to test true frontend accessibility
+      // as mock-ping doesn't exist yet and might confuse logs.
+      const res = await fetch(`/?_t=${Date.now()}`, { method: 'HEAD', cache: 'no-store' });
+      if (!res.ok && res.status !== 404) {
+         console.warn(`[MockTransport] API returned ${res.status}, network is up but server may be struggling.`);
+      } else {
+         console.log(`[MockTransport] API/Server reachable.`);
+      }
     } catch (e) {
       const err = new Error("Mock transport: True offline state detected (fetch failed).");
       err.name = "NetworkError";
       throw err;
     }
 
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (shouldFail) {
-      console.error(`[MockTransport] Simulated failure triggered for event ${event.id}`);
       throw new Error("Simulated network or backend failure.");
     }
 

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { getAdminAuditEvents } from "@/services/admin/adminDemo";
 import type { AdminAuditEvent, AdminAuditEventType } from "@/services/admin/adminDemo";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { Search, FilterX, ShieldCheck, Box, User, ArrowRight, Activity, Lock, In
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 export default function AdminAudit() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const allEvents = getAdminAuditEvents();

@@ -1,10 +1,10 @@
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAdminSummary, getRecentActivity } from "@/services/admin/adminDemo";
 import { Activity, AlertTriangle, CheckCircle, Clock, Info } from "lucide-react";
 
 export default function AdminHome() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const summary = getAdminSummary();
   const activities = getRecentActivity();
 

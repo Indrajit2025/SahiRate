@@ -17,6 +17,10 @@ export interface Lot {
   accepted_by?: string;
   accepted_at?: string;
   payload: LotPayload;
+  /** Recycler's confirmed material — may differ from AI prediction in payload.material_id */
+  recycler_verified_material?: string;
+  /** Recycler's weighed amount at yard — may differ from collector's approx_weight_kg */
+  recycler_weight_kg?: number;
 }
 
 export interface OutboxEvent {

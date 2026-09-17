@@ -1,3 +1,4 @@
+import AudioGuidance from "@/components/AudioGuidance";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, CheckCircle2, IndianRupee, Weight } from "lucide-react";
@@ -6,10 +7,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
 import { collectorConfirmHandover } from "@/services/handovers";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { useAudio } from "@/hooks/useAudio";
 
-export default function ConfirmHandover() { const { t } = useI18nStore(); const { playAudio } = useAudio();
+export default function ConfirmHandover() { const { t } = useTranslation(); const { playAudio } = useAudio();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +33,6 @@ export default function ConfirmHandover() { const { t } = useI18nStore(); const 
   }
 
   const isConfirmed = handover.status !== "QR_GENERATED" && handover.status !== "VERIFIED";
-  useEffect(() => { if (isConfirmed) playAudio("collector.confirm_handover.confirmed"); }, [isConfirmed]);
 
 
   const handleConfirm = async () => {
@@ -66,6 +66,7 @@ export default function ConfirmHandover() { const { t } = useI18nStore(); const 
           <CardContent className="p-8 flex flex-col items-center justify-center space-y-4">
             <CheckCircle2 className="w-16 h-16 text-green-600" />
             <h2 className="text-2xl font-bold text-center text-green-800">{t("collector.confirm_handover.confirmed")}</h2>
+            <AudioGuidance audioKey="collector.confirm_handover.confirmed" />
             <p className="text-center text-green-700 mb-4">
               {t("collector.confirm_handover.confirmed_desc")}
             </p>

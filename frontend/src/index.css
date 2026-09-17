@@ -67,3 +67,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background-color: #F7F5EE;
+  box-shadow: 0 0 40px rgba(0,0,0,0.1);
+  overflow-x: hidden;
+}

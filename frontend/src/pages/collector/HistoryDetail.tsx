@@ -4,9 +4,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/db/dexie";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 
-export default function HistoryDetail() { const { t } = useI18nStore();
+export default function HistoryDetail() { const { t } = useTranslation();
   const { lotId } = useParams<{ lotId: string }>();
   const navigate = useNavigate();
 

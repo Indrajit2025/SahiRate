@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -12,7 +12,7 @@ const MOCK_PRICES = [
   { id: 'DISPLAY', label: 'Screen', min: 40, max: 50, trend: 'down', pct: 2 },
 ];
 
-export default function PriceBoard() { const { t } = useI18nStore();
+export default function PriceBoard() { const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (

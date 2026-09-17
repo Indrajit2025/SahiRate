@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { getAdminTransactions } from "@/services/admin/adminDemo";
 import type { AdminLifecycleStatus, AdminPaymentStatus } from "@/services/admin/adminDemo";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Search, FilterX, Clock, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 
 export default function AdminTransactions() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const allTransactions = getAdminTransactions();
 

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { getAdminTransactionById } from "@/services/admin/adminDemo";
 import type { AdminLifecycleStatus } from "@/services/admin/adminDemo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { ArrowLeft, CheckCircle2, Clock, Image as ImageIcon, MapPin, Receipt, Sh
 export default function AdminTransactionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const tr = getAdminTransactionById(id || "");
 
   if (!tr) {

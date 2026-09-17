@@ -11,7 +11,7 @@ export default function Placeholder() {
       <AlertCircle className="w-16 h-16 text-muted-foreground mb-4" />
       <h1 className="text-2xl font-bold mb-2">{title}</h1>
       <p className="text-muted-foreground max-w-md">
-        This section will be implemented in a later Admin milestone.
+        Reference / Demo Data
       </p>
     </div>
   );

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { LayoutDashboard, Receipt, ShieldCheck, AlertTriangle, FileText, Menu, X, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
 import LanguageSelector from "@/components/LanguageSelector";
 
 export default function AdminLayout() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function AdminLayout() {
           <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle Menu">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </Button>
-          <span className="font-bold text-lg">{String(t("admin.layout.title"))}</span>
+          <div className="flex items-baseline gap-1.5"><Logo className="text-lg" /><span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Admin</span></div>
         </div>
         <LanguageSelector />
       </div>
@@ -41,7 +42,7 @@ export default function AdminLayout() {
         ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         <div className="hidden md:flex items-center justify-between p-4 border-b">
-          <span className="font-bold text-xl text-primary">{String(t("admin.layout.title"))}</span>
+          <div className="flex items-baseline gap-2"><Logo className="text-xl" /><span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Admin</span></div>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">

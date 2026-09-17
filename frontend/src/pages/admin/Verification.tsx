@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useI18nStore } from "@/i18n";
+import { useTranslation } from "@/i18n";
 import { getAdminVerifications, updateAdminVerification } from "@/services/admin/adminDemo";
 import type { AdminVerification, VerificationStatus } from "@/services/admin/adminDemo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { ShieldCheck, XCircle, Clock, MapPin, FileText, Phone, Building2, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export default function AdminVerification() {
-  const { t } = useI18nStore();
+  const { t } = useTranslation();
   const [refreshToggle, setRefreshToggle] = useState(0);
 
   const allVerifications = getAdminVerifications();

@@ -3,11 +3,14 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { Cloud, CloudOff, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { db } from '@/db/dexie';
 import { useSyncStore } from '@/stores/syncStore';
-import { useI18nStore } from '@/i18n';
+import { useTranslation } from '@/i18n';
 
 export default function SyncIndicator() {
   const { isOnline, isSyncing } = useSyncStore();
   const location = useLocation();
+  const { t } = useTranslation();
+  
+  const isPublic = ['/', '/scan', '/rates', '/access'].includes(location.pathname);
   const syncPath = location.pathname.startsWith('/recycler') ? '/recycler/sync' : '/collector/sync';
 
   // Reactively count how many events are not synced
@@ -21,13 +24,57 @@ export default function SyncIndicator() {
     []
   );
 
-  const { t } = useI18nStore();
-
   if (unsyncedCount === undefined || hasFailed === undefined) {
-    // Avoid falsely showing "Synced" while the IndexedDB query is still resolving
     return null;
   }
 
+  // PUBLIC EXPERIENCE TREATMENT
+  if (isPublic) {
+    if (!isOnline) {
+      return (
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-amber-600/80 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest border border-amber-200/50 shadow-sm mt-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+          <span>Offline</span>
+        </div>
+      );
+    }
+    
+    if (hasFailed) {
+      return (
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-destructive/90 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest border border-destructive/20 shadow-sm mt-1">
+          <span>! Sync needs attention</span>
+        </div>
+      );
+    }
+
+    if (isSyncing) {
+      return (
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-primary/80 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest border border-primary/20 shadow-sm mt-1">
+          <RefreshCw className="w-2.5 h-2.5 animate-spin" />
+          <span>Syncing...</span>
+        </div>
+      );
+    }
+
+    if (unsyncedCount && unsyncedCount > 0) {
+      return (
+        <div className="flex items-center gap-1.5 text-[10px] font-bold text-charcoal/70 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest border border-warm-borders shadow-sm mt-1">
+          <RefreshCw className="w-2.5 h-2.5" />
+          <span>{unsyncedCount} pending</span>
+        </div>
+      );
+    }
+
+    // Healthy (Ready offline)
+    return (
+      <div className="flex items-center gap-1.5 text-[10px] font-bold text-success/60 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full uppercase tracking-widest border border-success/10 mt-1 opacity-0 hover:opacity-100 transition-opacity">
+        <CheckCircle2 className="w-2.5 h-2.5" />
+        <span>Ready offline</span>
+      </div>
+    );
+  }
+
+  // COLLECTOR / RECYCLER / ADMIN ORIGINAL TREATMENT
   if (!isOnline) {
     return (
       <Link to={syncPath} className="flex items-center gap-2 text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 shadow-sm transition-all hover:bg-amber-100">
